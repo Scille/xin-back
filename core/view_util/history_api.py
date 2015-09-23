@@ -3,7 +3,7 @@ from collections import namedtuple
 
 from core.tools import get_pagination_urlargs, abort
 from core import CoreResource, view_util
-from demo.permissions import POLICIES as p
+from xin.permissions import POLICIES as p
 
 
 HistoryAPI = namedtuple('HistoryAPI', ('item', 'endpoint', 'list',

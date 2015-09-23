@@ -5,7 +5,7 @@ from flask.ext.script import Manager, Server, Shell
 from mongopatcher.extensions.flask import init_patcher, patcher_manager
 
 from core.managers import solr_manager_factory
-from demo import bootstrap_app, model
+from xin import bootstrap_app, model
 
 
 app = bootstrap_app()
@@ -17,7 +17,7 @@ class BootstrappedShell(Shell):
         def make_context():
             context = {'db': current_app.db, 'solr': current_app.solr}
             for elem in ('User', ):
-                exec("from sief.model import %s" % elem)
+                exec("from xin.model import %s" % elem)
                 context[elem] = eval(elem)
             print('Context vars: %s' % ', '.join(context.keys()))
             return context
