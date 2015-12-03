@@ -90,7 +90,7 @@ def bootstrap_app(app=None, config=None):
             app.logger.addHandler(stream_handler)
         else:
             # Create a default admin in debug
-            from sief.model import User
+            from xin.model import User
             try:
                 User.objects.get(email='admin@test.com')
             except User.DoesNotExist:

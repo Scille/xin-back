@@ -1,1 +1,1 @@
-web: gunicorn "sief.main:bootstrap_app()" --log-file -
+web: gunicorn "xin.main:bootstrap_app()" --log-file -
