@@ -3,7 +3,6 @@ from collections import namedtuple
 
 from core.tools import get_pagination_urlargs, abort
 from core import CoreResource, view_util
-from xin.permissions import POLICIES as p
 
 
 HistoryAPI = namedtuple('HistoryAPI', ('item', 'endpoint', 'list',
@@ -24,6 +23,7 @@ def history_api_factory(origin_cls):
     endpoint_origin = "%sAPI" % origin_cls.__name__
 
     class HistorySchema(view_util.UnknownCheckedSchema):
+
         """Read-only schema"""
 
         def get_links(self, obj):
@@ -39,7 +39,6 @@ def history_api_factory(origin_cls):
 
     class HistoryItemAPI(CoreResource):
 
-        @p.history.see.require(http_exception=403)
         def get(self, origin_id, item_id):
             origin = origin_cls()
             item = origin._meta['history_cls'].objects.get_or_404(id=item_id)
@@ -49,7 +48,6 @@ def history_api_factory(origin_cls):
 
     class HistoryListAPI(CoreResource):
 
-        @p.history.see.require(http_exception=403)
         def get(self, origin_id):
             page, per_page = get_pagination_urlargs()
             origin = origin_cls()
@@ -70,5 +68,5 @@ def register_history(api, origin_cls, name=None):
     api.add_resource(history.list, '/%s/<string:origin_id>/history' % name,
                      endpoint=history.endpoint_list)
     api.add_resource(history.item,
-        '/%s/<string:origin_id>/history/<objectid:item_id>' % name,
-        endpoint=history.endpoint)
+                     '/%s/<string:origin_id>/history/<objectid:item_id>' % name,
+                     endpoint=history.endpoint)
