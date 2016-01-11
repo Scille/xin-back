@@ -2,7 +2,6 @@ import logging
 import requests
 from os.path import abspath, dirname
 from flask import current_app, make_response
-from flask_mail import Mail
 
 from core.core_app import CoreApp
 
@@ -30,10 +29,10 @@ def bootstrap_app(app=None, config=None):
     elif config:
         app.config.update(config)
 
-    from xin import model, events, roles
+    from sample import model, events, roles
     from core import auth
-    from xin.view import api
-    from xin.tasks.email import mail
+    from sample.view import api
+    from sample.tasks.email import mail
 
     app.bootstrap()
 
@@ -90,7 +89,7 @@ def bootstrap_app(app=None, config=None):
             app.logger.addHandler(stream_handler)
         else:
             # Create a default admin in debug
-            from xin.model import User
+            from sample.model import User
             try:
                 User.objects.get(email='admin@test.com')
             except User.DoesNotExist:

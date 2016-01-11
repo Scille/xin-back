@@ -4,8 +4,8 @@ from string import ascii_uppercase, ascii_lowercase, digits, punctuation
 
 from core.model_util import BaseController, BaseSolrSearcher, BaseDocument, fields
 
-from xin.tasks.email import default_mail, mail, default_subject
-from xin.roles import ROLES
+from sample.tasks.email import default_mail, mail, default_subject
+from sample.roles import ROLES
 
 
 def generate_password(length=12):

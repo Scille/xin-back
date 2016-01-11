@@ -2,12 +2,8 @@
 Centralize the events
 """
 
-from flask.ext.restful import Resource
-
 from core.tools import Tree
-from core.auth import current_user, login_required
-
-from xin.permissions import POLICIES as p
+from core.auth import current_user
 
 
 class Event:
