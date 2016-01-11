@@ -13,8 +13,8 @@ class UTCTZnaiveDateTime(DateTime):
     DateTime object in UTC with no tzinfo
     """
 
-    def _deserialize(self, value):
-        value = super()._deserialize(value)
+    def _deserialize(self, value, attr, data):
+        value = super()._deserialize(value, attr, data)
         if value and value.tzinfo:
             value = (value - value.utcoffset()).replace(tzinfo=None)
         return value
@@ -25,10 +25,10 @@ class StrictBoolean(Boolean):
     Real boolean (i.e. no cast from string) validation
     """
 
-    def _deserialize(self, value):
+    def _deserialize(self, value, attr, data):
         if value not in (True, False, None):
             raise ValidationError('Not a boolean')
-        return super()._deserialize(value)
+        return super()._deserialize(value, attr, data)
 
 
 class StrictString(String):
@@ -36,10 +36,10 @@ class StrictString(String):
     Real string (i.e. no desesperate cast) validation
     """
 
-    def _deserialize(self, value):
+    def _deserialize(self, value, attr, data):
         if not isinstance(value, str):
             raise ValidationError('Not a string')
-        return super()._deserialize(value)
+        return super()._deserialize(value, attr, data)
 
 
 class StrictList(List):
@@ -47,10 +47,21 @@ class StrictList(List):
     Real List (i.e. no cast from string) validation
     """
 
-    def _deserialize(self, value):
+    def _deserialize(self, value, attr, data):
         if not isinstance(value, (list, tuple)):
             raise ValidationError('Not a list')
-        return super()._deserialize(value)
+        # Replace default _deserialize instead of calling it to add
+        # item index to error message
+        errors = {}
+        deserialized = []
+        for i, each in enumerate(value):
+            try:
+                deserialized.append(self.container.deserialize(each))
+            except ValidationError as err:
+                errors[i] = err.messages
+        if errors:
+            raise ValidationError(errors)
+        return deserialized
 
 
 class LinkedReference(Reference):
@@ -58,14 +69,14 @@ class LinkedReference(Reference):
     Marshmallow custom field to map with :class Mongoengine.Reference:
     """
 
-    def _deserialize(self, value):
+    def _deserialize(self, value, attr, data):
         # Incomming document can be 1) a single ObjectId,
         # 2) a dict containing an 'id' entry with the ObjectId
         if isinstance(value, dict):
             value = value.get('id')
             if not value:
                 raise ValidationError("Champ 'id' manquant")
-        return super()._deserialize(value)
+        return super()._deserialize(value, attr, data)
 
     def _serialize(self, value, attr, obj):
         # Return a dict containing the id and the links if registered for

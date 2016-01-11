@@ -79,13 +79,16 @@ def login_required_fresh(func):
     return login_required(func, True)
 
 
-def generate_access_token(email, hashed_password, fresh=False, exp=None):
-    exp = exp or datetime.utcnow().timestamp() + current_app.config['TOKEN_VALIDITY']
+def generate_access_token(email, hashed_password, fresh=False, exp=None, freshness_exp=None):
+    now = datetime.utcnow().timestamp()
+    exp = exp or now + current_app.config['TOKEN_VALIDITY']
+    freshness_exp = freshness_exp or now + current_app.config['TOKEN_FRESHNESS_VALIDITY']
     return encode_token({
         'exp': exp,
         'email': email,
         'type': 'auth',
         'fresh': fresh,
+        'freshness_exp': freshness_exp,
         'watcher': _build_pass_watcher(hashed_password)
     })
 
@@ -98,6 +101,17 @@ def generate_remember_me_token(email, hashed_password, exp=None):
         'type': 'remember-me',
         'watcher': _build_pass_watcher(hashed_password)
     })
+
+
+def check_password_strength(password):
+    import re
+    specials = '!@#$%^&*+-/[]{}\\|=/?><,.;:"\''
+    if (len(password) < 8
+            or not re.search(r'[A-Z]', password)
+            or not re.search(r'[a-z]', password)
+            or not re.search(r'[0-9]', password)):
+        return False
+    return next((True for l in password if l in specials), False)
 
 
 class Auth:
@@ -131,7 +145,8 @@ def login_required(func, must_be_fresh=False):
         user = _basic_authentication()
         if not user:
             user = _token_authentication(must_be_fresh)
-        if not user:
+        if not user or (user.fin_validite and
+                        user.fin_validite < datetime.utcnow()):
             if must_be_fresh:
                 abort(401, 'Token frais requis')
             else:
@@ -156,7 +171,7 @@ def _load_identity(user=None):
         identity.provides.add(UserNeed(user.id))
         if user.role:
             role_policies = current_app.config['ROLES'].get(user.role)
-            if not role_policies:
+            if role_policies is None:  # Can be empty list
                 current_app.logger.warning('user `%s` has unknow role `%s`' %
                                            (user.id, user.role))
             else:
@@ -178,6 +193,9 @@ class ChangePassword(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('new_password', type=str, required=True)
         args = parser.parse_args()
+        if not check_password_strength(args['new_password']):
+            abort(400, 'Le mot de passe doit faire au moins 8 caractères '
+                       'avec au moins une majuscule, une minuscule et un caracère spécial')
         current_user.controller.set_password(args['new_password'])
         current_user.save()
         # Reissue a new token
@@ -251,7 +269,9 @@ def _token_authentication(must_be_fresh=False):
         return None
     token = decode_token(auth[1])
     g._token = token
-    if not token or token['type'] != 'auth' or (must_be_fresh and not token['fresh']):
+    if not token or token['type'] != 'auth' or (
+        must_be_fresh and (not token['fresh'] or
+                           token['freshness_exp'] < datetime.utcnow().timestamp())):
         return None
     user_cls = current_app.config.get('AUTH_USER_CLS')
     try:

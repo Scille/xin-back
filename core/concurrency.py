@@ -32,8 +32,9 @@ def concurrency_handler(func, etag_src_field='_version'):
             break
         # Automatically set ETAG for payload with _version field
         data, status_code, headers = unpack(ret)
-        etag = data.get(etag_src_field)
-        if etag is not None:
-            headers['Etag'] = str(etag)
+        if isinstance(data, dict):
+            etag = data.get(etag_src_field)
+            if etag is not None:
+                headers['Etag'] = str(etag)
         return data, status_code, headers
     return wrapper

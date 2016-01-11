@@ -350,7 +350,8 @@ class BaseSolrSearcher(Searcher):
         kwargs.setdefault('commit', False)
         kwargs.setdefault('waitFlush', False)
         if document.pk:
-            current_app.solr.delete(id=str(document.pk), **kwargs)
+            sdoc_id = '%s-%s' % (document._class_name, document.pk)
+            current_app.solr.delete(id=sdoc_id, **kwargs)
 
     def clear_collection(self, **kwargs):
         """

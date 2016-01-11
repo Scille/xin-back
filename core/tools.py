@@ -3,6 +3,11 @@ from collections.abc import Iterable
 from werkzeug.exceptions import HTTPException
 from flask import abort as original_flask_abort
 from functools import namedtuple, wraps
+from flask.ext.mongoengine import Document
+from mongoengine.fields import EmbeddedDocument
+from mongoengine.base.datastructures import BaseList
+import io
+import csv
 
 
 def check_if_match(doc=None):
@@ -37,6 +42,7 @@ def abort(http_status_code, *args, **kwargs):
 
 
 class LazyList(Iterable):
+
     """
     List generated at evaluation time (useful to pass a reference
     on a list that should be configured at runtime)
@@ -67,21 +73,21 @@ def get_pagination_urlargs(default_per_page=20):
     .. note :
         abort 400 in case of an invalid pagination value
     """
-    msg = 'must be number > 0'
+    msg = 'must be number > %s'
     try:
         page = int(request.args.get('page', 1))
         if page <= 0:
-            abort(400, page=msg)
+            abort(400, page=msg % 0)
     except ValueError:
-        abort(400, page=msg)
+        abort(400, page=msg % 0)
     if 'per_page' not in request.args:
         return page, default_per_page
     try:
         per_page = int(request.args['per_page'])
-        if per_page <= 0:
-            abort(400, page=msg)
+        if per_page < 0:
+            abort(400, page=msg % 1)
     except ValueError:
-        abort(400, page=msg)
+        abort(400, page=msg % 1)
     return page, per_page
 
 
@@ -120,6 +126,7 @@ def list_to_pagination(items, already_sliced=False, page=1, per_page=None,
 
 
 class Tree:
+
     """
     Tree can be used to represent a tree of object ::
 
@@ -144,6 +151,7 @@ class Tree:
         ['node_1.leaf_1_1', 'node_1.leaf_1_2', 'node_2.leaf_2_1',
          'node_2.node_2_2.leaf_2_2_1', 'node_2.node_2_2.leaf_2_2_2']
     """
+
     def __init__(self, nodes, basename=''):
         self.nodes = []
         if basename:
@@ -193,6 +201,7 @@ class Tree:
 
 
 class LazzyManager:
+
     """
     Allow to dynimacally register function that will be called at
     lazily when they will be required
@@ -221,3 +230,46 @@ class LazzyManager:
             self.load()
             return fn(*args, **kwargs)
         return wrapper
+
+
+class ExportError(Exception):
+    pass
+
+
+class Export:
+
+    @staticmethod
+    def print_attribute(attribute, document):
+        if hasattr(document, attribute):
+            element = getattr(document, attribute)
+            if issubclass(type(element), Document):
+                if hasattr(element, 'id'):
+                    return getattr(element, 'id')
+                elif hasattr(element, 'pk'):
+                    return getattr(element, 'pk')
+            elif issubclass(type(element), EmbeddedDocument):
+                return element.to_json()
+            elif issubclass(type(element), BaseList):
+                return [e.to_json() for e in element]
+            return element
+        else:
+            return ""
+
+    def dump_document(self, attributesToExport, document):
+        return [self.print_attribute(attribute, document) for attribute in attributesToExport]
+
+    def __init__(self, document):
+        if not issubclass(document, Document):
+            raise ExportError("Document non existant {}".format(document))
+        self.document = document
+
+    def csvFormat(self, attributesToExport):
+        elements = self.document.objects()
+
+        lines = [self.dump_document(attributesToExport, element) for element in elements]
+        output = io.StringIO()
+        writer = csv.writer(output, delimiter=',')
+        #Header = attributesToExport
+        writer.writerow(attributesToExport)
+        writer.writerows(lines)
+        return output.getvalue()

@@ -1,0 +1,21 @@
+core
+
+	- Remove reference to the policies link to xin in history_api.
+	  Pass the policiy through the context or creation of the object?
+	  To check with Manu
+
+	- Do we need a definition of the connector, since a connector is simply
+	  a translation method between two system? Maybe a factorization is possible
+	  and an abstraction (composition no extending)
+	  Produce client code something like this
+	  TestingConnector
+	  	self.connector(core.connector.Connector)
+	  	connector.translate ?? (to check)
+
+  	- a broker definition same as the connector?? maybe it is needed to have
+  	  some tools to help the developper to create a broker
+
+Gros problemes d'interdependance dans les tests entre xin et core, aucune des fonctionalité du core n'as l'air d'etre unit tester
+don't get what the file test_cors test
+
+Reminder a test is a test if the name of it is comprehensible by another personn and his code also, if it's too complicate it is not a tester

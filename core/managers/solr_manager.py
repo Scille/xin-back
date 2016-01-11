@@ -2,7 +2,6 @@
 
 from flask import current_app
 from flask.ext.script import Manager, prompt_bool
-from datetime import datetime
 from dateutil.parser import parse as dateparse
 from functools import partial
 
@@ -20,8 +19,9 @@ def ask_or_abort(fn, yes=False, msg=None):
 def solr_manager_factory(solr_collections):
     solr_manager = Manager(usage="Handle Solr operations")
 
-    @solr_manager.option('-y', '--yes', help="Don't ask for confirmation",
-                        action='store_true', default=False)
+    @solr_manager.option('-y', '--yes',
+                         help="Don't ask for confirmation",
+                         action='store_true', default=False)
     @solr_manager.option('-s', '--since', default=None,
                          help="Update only element updated since this date")
     def clear(yes, since):
@@ -34,13 +34,14 @@ def solr_manager_factory(solr_collections):
         ask_or_abort(partial(current_app.solr.delete, q=q), yes=yes)
 
     @solr_manager.option('-y', '--yes', help="Don't ask for confirmation",
-                        action='store_true', default=False)
+                         action='store_true', default=False)
     @solr_manager.option('-s', '--since', default=None,
                          help="Update only element updated since this date")
     def build(yes, since):
         """Build the solr database"""
         if since:
             since = dateparse(since)
+
         def _build():
             for col_cls in solr_collections:
                 if since:
@@ -60,7 +61,7 @@ def solr_manager_factory(solr_collections):
         ask_or_abort(_build, yes=yes)
 
     @solr_manager.option('-y', '--yes', help="Don't ask for confirmation",
-                        action='store_true', default=False)
+                         action='store_true', default=False)
     @solr_manager.option('-s', '--since', default=None,
                          help="Update only element updated since this date")
     def rebuild(yes, since):

@@ -6,6 +6,7 @@ from flask import Request
 # using flask.ext.mongoengine import makes isinstance fail
 from flask_mongoengine.pagination import Pagination
 from mongoengine import Document
+from flask_principal import Permission
 
 from core.view_util.fields import LinkedGenericReference
 
@@ -51,7 +52,8 @@ def dynamic_json_encoder_factory():
                 (bson.ObjectId, lambda x: str(x)),
                 (set, lambda x: list(x)),
                 (Pagination, encode_pagination),
-                (Document, lambda x: LinkedGenericReference(type(x))._serialize(x, None, None))
+                (Document, lambda x: LinkedGenericReference(type(x))._serialize(x, None, None)),
+                (Permission, lambda x: 'Permission required')
             ]
 
         def default(self, obj):

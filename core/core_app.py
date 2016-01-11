@@ -3,6 +3,7 @@ from flask import Flask
 from flask.ext.principal import Principal
 from flask.ext import restful, cors
 from flask.ext.mongoengine import MongoEngine
+import logging
 
 from core.encoders import dynamic_json_encoder_factory, ObjectIdConverter, JsonRequest
 from core.solr import Solr
@@ -24,7 +25,9 @@ class CoreApp(Flask):
         # Overload default request to return 400 if no payload is provided
         self.request_class = JsonRequest
         self.json_encoder = dynamic_json_encoder_factory()
-        restful.representations.json.settings['cls'] = self.json_encoder
+        self.config['RESTFUL_JSON'] = {
+            'cls': self.json_encoder
+        }
         self.db = MongoEngine()
         self.solr = Solr()
 
@@ -38,6 +41,10 @@ class CoreApp(Flask):
             >>> app.config['MY_CONF'] = 'DEFAULT_VALUE'
             >>> app.bootstrap()
         """
+        # Enable logger on stdout
+        stream_handler = logging.StreamHandler()
+        stream_handler.setLevel(logging.INFO)
+        self.logger.addHandler(stream_handler)
         # Principal and CORS support must be initialized at bootstrap time
         # in order to have up-to-date config
         self._principal = Principal(self, use_sessions=False)
