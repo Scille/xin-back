@@ -1,4 +1,4 @@
-"""
+"""@package docstring
 Auth module provide two type of authentification
  - basic auth with login/password
  - token based with remember-me handling
@@ -24,6 +24,7 @@ from flask.ext.restful import Resource, reqparse
 from flask.ext.principal import (Identity, ActionNeed, UserNeed,
                                  AnonymousIdentity, identity_changed)
 from werkzeug.local import LocalProxy
+from string import ascii_uppercase, ascii_lowercase, digits, punctuation
 
 from core.tools import abort
 from core.api import CoreApi
@@ -33,28 +34,52 @@ from core.api import CoreApi
 current_user = LocalProxy(lambda: g._current_user)
 
 
+def generate_password(length=12):
+    """
+    Generate a password of lenght 12 by default with upper/lower case character digit and punctuation
+    """
+    from passlib.utils import generate_password as gen_pwd
+    choice = ascii_uppercase + ascii_lowercase + digits + punctuation
+    return gen_pwd(length, choice)
+
+
 def encrypt_password(password):
+    """
+    Encrypt a password to store it in the database
+    """
     return pwd_context.encrypt(password)
 
 
 def verify_password(password, pwd_hash):
+    """
+    Decrypt the password with the hash associate to it
+    """
     return pwd_context.verify(password, pwd_hash)
 
 
 def encode_token(payload):
+    """
+    Encode an access token. Note that you need to have a 'SECRET_KEY' in your config.
+    It will use the algorithm HS256 to crypt it
+    """
     return jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm='HS256').decode()
 
 
 def decode_token(token):
+    """
+    Decode an access token previously encode with encode_token
+    """
     try:
         return jwt.decode(token, current_app.config['SECRET_KEY'])
-    except jwt.InvalidTokenError:
+    except jwt.InvalidTokenError as e:
         return None
 
 
 def _build_pass_watcher(hashed_password):
-    # Create a value that get revoked whenever the
-    # user's password is changed
+    """
+    Create a value that get revoked whenever the
+    user's password is changed
+    """
     key = current_app.config['SECRET_KEY'] + hashed_password
     return sha256(key.encode()).hexdigest()
 
@@ -104,6 +129,14 @@ def generate_remember_me_token(email, hashed_password, exp=None):
 
 
 def check_password_strength(password):
+    """
+    Check the password strenght of a user it has to match the following criteria
+        - lenght >= 8
+        - contains upper case character
+        - contains lower case character
+        - contains digit
+        - contains some specials character: !@#$%^&*+-/[]{}\\|=/?><,.;:"\'
+    """
     import re
     specials = '!@#$%^&*+-/[]{}\\|=/?><,.;:"\''
     if (len(password) < 8
@@ -115,9 +148,11 @@ def check_password_strength(password):
 
 
 class Auth:
+
     """
     Bind the Auth api to the given app
     """
+
     def __init__(self, app=None, url_prefix=None):
         if app is not None:
             self.init_app(app, url_prefix=url_prefix)
@@ -136,7 +171,9 @@ class Auth:
 
 
 def login_required(func, must_be_fresh=False):
-    """Authenticate decorator for the routes"""
+    """
+    Authenticate decorator for the routes
+    """
     @wraps(func)
     def wrapper(*args, **kwargs):
         if not getattr(func, 'authenticated', True):
@@ -185,6 +222,7 @@ def _load_identity(user=None):
 
 
 class ChangePassword(Resource):
+
     """
     Change the password for a user providing a fresh token (i.e. not remembered-me token)
     """
@@ -203,10 +241,12 @@ class ChangePassword(Resource):
 
 
 class Login(Resource):
+
     """
     Authenticate a user given it email and password then
     issue him an access token
     """
+
     def post(self):
         # Tell Flask-Principal the user is anonymous
         _load_identity()
@@ -230,9 +270,11 @@ class Login(Resource):
 
 
 class RememberMe(Resource):
+
     """
     Check the user's remember-me token and reissue an access token
     """
+
     def post(self):
         # Tell Flask-Principal the user is anonymous
         _load_identity()
