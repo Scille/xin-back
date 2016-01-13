@@ -10,9 +10,11 @@ EXTENSION_KEY = 'solr'
 
 
 class Solr(object):
+
     """
     PySolr flask app to get automatically configure and connection
     """
+
     def __init__(self, app=None):
         if app is not None:
             self.app = app

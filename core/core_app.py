@@ -1,7 +1,7 @@
 from os.path import abspath, dirname
 from flask import Flask
 from flask.ext.principal import Principal
-from flask.ext import restful, cors
+from flask.ext import cors
 from flask.ext.mongoengine import MongoEngine
 import logging
 
@@ -10,6 +10,7 @@ from core.solr import Solr
 
 
 class CoreApp(Flask):
+
     """
     CoreApp is a regular :class:`Flask` app with cors, flask-principal,
     "restfulness" flavors
