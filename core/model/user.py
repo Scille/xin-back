@@ -9,7 +9,8 @@ from mongoengine import ValidationError
 from core.model_util import BaseController, BaseSolrSearcher, BaseDocument, fields
 
 
-class UserController(BaseController):
+class UserDocumentController(BaseController):
+    meta = {'allow_inheritance': True}
 
     """
     The controller of the Simple User Document
@@ -43,20 +44,21 @@ class UserController(BaseController):
             return False
 
 
-class UserSearcher(BaseSolrSearcher):
-
+class UserDocumentSearcher(BaseSolrSearcher):
+    meta = {'allow_inheritance': True}
     """
     Search a user based on its email
     """
     FIELDS = ('email')
 
 
-class User(BaseDocument):
+class UserDocument(BaseDocument):
 
     """
     This is the minimal model representation of User, you are free to extend this document
     in your application
     """
-    meta = {'controller_cls': UserController, 'searcher_cls': UserSearcher}
+    meta = {'controller_cls': UserDocumentController,
+            'searcher_cls': UserDocumentSearcher, 'allow_inheritance': True}
     email = fields.EmailField(max_length=255, required=True, unique=True)
     password = fields.StringField(max_length=255)

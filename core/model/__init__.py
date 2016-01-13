@@ -1,8 +1,8 @@
-from core.model.user import User, UserController
+from core.model.user import UserDocument, UserDocumentController, UserDocumentSearcher
 
 
 def init_app(app):
     pass
 
 
-__all__ = ('User', 'UserController', 'init_app')
+__all__ = ('UserDocument', 'UserDocumentController', 'UserDocumentSearcher', 'init_app')

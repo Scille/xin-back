@@ -1,30 +1,11 @@
-from datetime import datetime
-from mongoengine import ValidationError
-from string import ascii_uppercase, ascii_lowercase, digits, punctuation
-
-from core.model_util import BaseController, BaseSolrSearcher, BaseDocument, fields
-
+from core.model_util import fields
+from core.auth import generate_password
+from core.model import UserDocument, UserDocumentSearcher, UserDocumentController
 from sample.tasks.email import default_mail, mail, default_subject
 from sample.roles import ROLES
 
 
-def generate_password(length=12):
-    from passlib.utils import generate_password as gen_pwd
-    choice = ascii_uppercase + ascii_lowercase + digits + punctuation
-    return gen_pwd(length, choice)
-
-
-class UserController(BaseController):
-
-    def clean(self):
-        if not self.document.password:
-            raise ValidationError(errors={'mot_de_passe':
-                                          'Ce champ est obligatoire'})
-
-    def set_password(self, password):
-        """Store the password encrypted (i.e. hashed&salted)"""
-        from core.auth import encrypt_password
-        self.document.password = encrypt_password(password)
+class UserController(UserDocumentController):
 
     def set_password_and_email(self):
         from core.auth import encrypt_password
@@ -34,25 +15,14 @@ class UserController(BaseController):
         body = default_mail.format(name=self.document.email, password=clear_pwd)
         mail.send(subject=default_subject, recipient=self.document.email, body=body)
 
-    def close_user(self, fin_validite=None):
-        if not self.document.fin_validite:
-            self.document.fin_validite = fin_validite or datetime.utcnow()
-            return True
-        else:
-            # user already closed
-            return False
 
-
-class UserSearcher(BaseSolrSearcher):
+class UserSearcher(UserDocumentSearcher):
     FIELDS = ('email', 'role')
 
 
-class User(BaseDocument):
+class User(UserDocument):
     meta = {'controller_cls': UserController, 'searcher_cls': UserSearcher}
-
-    email = fields.EmailField(max_length=255, required=True, unique=True)
     role = fields.StringField(choices=list(ROLES.keys()), null=True)
-    password = fields.StringField(max_length=255)
     permissions = fields.ListField(fields.StringField(), default=list)
     lastname = fields.StringField(max_length=255)
     firstname = fields.StringField(max_length=255)
