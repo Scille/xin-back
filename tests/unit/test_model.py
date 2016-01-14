@@ -5,9 +5,9 @@ from tests import common
 from tests.fixtures import *
 
 from core.model_util import (Document, HistorizedDocument, BaseController,
-                             ControlledDocument, VersionedDocument)
+                             ControlledDocument, VersionedDocument, fields)
 from core.concurrency import ConcurrencyError
-from xin.model import fields
+
 
 class TestController(common.BaseTest):
 
@@ -19,24 +19,34 @@ class TestController(common.BaseTest):
                 'reloading': ReloadingController
             }
             return router[document.status](document)
+
         class ReadyController(BaseController):
+
             def state(self):
                 return "%s is ready to fire" % self.document.name
+
             def fire(self):
                 self.document.status = 'fired'
                 self.document.save()
+
         class FiredController(BaseController):
+
             def state(self):
                 return "%s is empty" % self.document.name
+
             def reload(self):
                 self.document.status = 'reloading'
                 self.document.save()
+
         class ReloadingController(BaseController):
+
             def state(self):
                 return "%s is reloading..." % self.document.name
+
             def done(self):
                 self.document.status = 'ready'
                 self.document.save()
+
         class Gun(ControlledDocument):
             meta = {'controller_cls': controller_factory}
             name = fields.StringField(required=True)
@@ -55,9 +65,11 @@ class TestController(common.BaseTest):
 
     def test_dualinheritance(self):
         class DualInheritanceController(BaseController):
+
             def make_v2(self):
                 self.document.field = 'v2'
                 self.document.save()
+
         class DualInheritanceDoc(ControlledDocument, HistorizedDocument):
             meta = {'controller_cls': DualInheritanceController}
             field = fields.StringField()
@@ -72,6 +84,7 @@ class TestController(common.BaseTest):
 
 
 class TestConcurrency(common.BaseTest):
+
     def test_concurrency(self):
         class Doc(VersionedDocument):
             field = fields.StringField()
