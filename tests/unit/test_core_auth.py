@@ -79,4 +79,3 @@ def test_check_password_strenght():
 
 def test_generate_password():
     assert True == check_password_strength(generate_password())
-    assert False == check_password_strength(generate_password(7))
