@@ -40,7 +40,10 @@ def generate_password(length=12):
     """
     from passlib.utils import generate_password as gen_pwd
     choice = ascii_uppercase + ascii_lowercase + digits + punctuation
-    return gen_pwd(length, choice)
+    pwd = gen_pwd(length, choice)
+    while not check_password_strength(pwd):
+        pwd = gen_pwd(size=length, charset=choice)
+    return pwd
 
 
 def encrypt_password(password):
