@@ -1,6 +1,6 @@
 import pytest
 
-from tests import common
+from sample_tests import common
 
 
 CORS_HEADERS = [

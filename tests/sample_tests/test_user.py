@@ -1,8 +1,8 @@
 import pytest
 import json
 
-from tests import common
-from tests.test_auth import user
+from sample_tests import common
+from sample_tests.test_auth import user
 
 from sample.model.user import User
 from sample.permissions import POLICIES as p

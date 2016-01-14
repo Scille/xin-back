@@ -1,15 +1,14 @@
 import pytest
 from mongoengine import ValidationError as MongoValidationError
 
-from tests import common
-from tests.fixtures import *
-
 from core.model_util import (Document, HistorizedDocument, BaseController,
                              ControlledDocument, VersionedDocument, fields)
 from core.concurrency import ConcurrencyError
 
+from mongoengine.errors import SaveConditionError
 
-class TestController(common.BaseTest):
+
+class TestController():
 
     def test_controller(self):
         def controller_factory(document):
@@ -83,7 +82,7 @@ class TestController(common.BaseTest):
         assert history.count() == 2
 
 
-class TestConcurrency(common.BaseTest):
+class TestConcurrency():
 
     def test_concurrency(self):
         class Doc(VersionedDocument):
@@ -97,7 +96,7 @@ class TestConcurrency(common.BaseTest):
         doc_concurrent.field = "v2_alternate"
         doc_concurrent.save()
         assert doc_concurrent.doc_version == 2
-        with pytest.raises(ConcurrencyError):
+        with pytest.raises(SaveConditionError):
             doc.save()
         doc.reload()
         assert doc.field == doc_concurrent.field
