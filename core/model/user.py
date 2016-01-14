@@ -21,7 +21,7 @@ class UserDocumentController(BaseController):
         Check if the user has at least an email, if not
         throw a ValidationError
         """
-        if not self.document.mail:
+        if not self.document.email:
             raise ValidationError(errors={'email':
                                           'This field is mandatory'})
 
@@ -62,3 +62,5 @@ class UserDocument(BaseDocument):
             'searcher_cls': UserDocumentSearcher, 'allow_inheritance': True}
     email = fields.EmailField(max_length=255, required=True, unique=True)
     password = fields.StringField(max_length=255)
+    # needed for the token validity
+    end_validity = fields.DateTimeField(null=True)

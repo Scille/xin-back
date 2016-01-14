@@ -182,8 +182,8 @@ def login_required(func, must_be_fresh=False):
         user = _basic_authentication()
         if not user:
             user = _token_authentication(must_be_fresh)
-        if not user or (user.fin_validite and
-                        user.fin_validite < datetime.utcnow()):
+        if not user or (user.end_validity and
+                        user.end_validity < datetime.utcnow()):
             if must_be_fresh:
                 abort(401, 'Token frais requis')
             else:
