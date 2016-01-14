@@ -1,7 +1,7 @@
 import json
 import pytest
 from collections import namedtuple
-from xin.main import bootstrap_app, create_app
+from sample.main import bootstrap_app, create_app
 from core.auth import generate_access_token
 
 
@@ -158,6 +158,10 @@ class BaseTest:
             }
         test_config['DISABLE_MAIL'] = False
         test_config['MAIL_SUPPRESS_SEND'] = True
+        test_config['TOKEN_FRESHNESS_VALIDITY'] = 100000
+        test_config['TOKEN_VALIDITY'] = 100000
+        test_config['SECRET_KEY'] = "testUltraSecretKey"
+
         bootstrap_app(app=app, config=test_config)
 
         cls.app = app

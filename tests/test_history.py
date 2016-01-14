@@ -5,8 +5,8 @@ from tests.test_auth import user
 from core.model_util import fields, HistorizedDocument
 from core.concurrency import ConcurrencyError
 
-from xin.permissions import POLICIES as p
-from xin.model.user import User
+from sample.permissions import POLICIES as p
+from sample.model.user import User
 
 
 DEFAULT_USER_PAYLOAD = {
@@ -55,18 +55,6 @@ class TestHistory(common.BaseTest):
 
 
 class TestAPIHistory(common.BaseTest):
-
-    def test_access(self, user):
-        user_req = self.make_auth_request(user, user._raw_password)
-        # Need permission to do it
-        route = '/users/%s/history' % user.pk
-        r = user_req.get(route)
-        assert r.status_code == 403, r
-        # Now provide the permission
-        user.permissions = [p.history.see.name]
-        user.save()
-        r = user_req.get(route)
-        assert r.status_code == 200, r
 
     def test_api(self, user):
         user_req = self.make_auth_request(user, user._raw_password)

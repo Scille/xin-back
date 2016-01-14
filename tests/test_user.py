@@ -1,13 +1,12 @@
 import pytest
 import json
-from datetime import datetime, timedelta
 
 from tests import common
 from tests.test_auth import user
 
-from xin.model.user import User
-from xin.permissions import POLICIES as p
-from xin.tasks.email import mail
+from sample.model.user import User
+from sample.permissions import POLICIES as p
+from sample.tasks.email import mail
 
 
 @pytest.fixture
@@ -167,7 +166,7 @@ class TestUser(common.BaseTest):
         for key, value in [
             ("id", "554534801d41c8de989d038e"),  # id is read only
             ("email", user.email),  # already taken
-                ]:
+        ]:
             payload = default_payload.copy()
             if value is None:
                 del payload[key]
@@ -201,8 +200,8 @@ class TestPaginationUser(common.BaseTest):
         # Start by creating a lot of users
         for i in range(49):
             new_user = User(email='pag.%s@user.com' % i,
-                                   password='password',
-                                   lastname='Pagination', firstname='Elem')
+                            password='password',
+                            lastname='Pagination', firstname='Elem')
             new_user.save()
         # Now let's test the pagination !
         common.pagination_testbed(user_req, '/users')

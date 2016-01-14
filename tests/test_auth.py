@@ -4,7 +4,7 @@ from base64 import b64decode, b64encode
 from datetime import datetime
 
 from tests import common
-from xin.model.user import User
+from sample.model.user import User
 from core.auth import generate_access_token, generate_remember_me_token
 
 
@@ -40,7 +40,7 @@ class TestAuth(common.BaseTest):
         user_req.token = r.data['token']
         assert user_req.get('/me').status_code == 200
         # Change password
-        r = user_req.patch('/login/password', data={'new_password': 'new_pass'})
+        r = user_req.patch('/login/password', data={'new_password': 'New-pass1'})
         assert r.status_code == 200, r
         assert 'token' in r.data, r
         # Old token is no longer valid
