@@ -1,6 +1,6 @@
 from flask.ext.principal import Permission, ActionNeed
 
-from core.tools import Tree
+from core.tree import Tree
 
 
 class Policy:
