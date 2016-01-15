@@ -145,17 +145,15 @@ class BaseTest:
         app.testing = True
         if runsolr:
             test_config = {
-                'MONGODB_HOST': app.config['MONGODB_TEST_URL'],
                 'SOLR_URL': app.config['SOLR_TEST_URL'],
                 'DISABLE_SOLR': False,
-                'TESTING': True
             }
         else:
             test_config = {
-                'MONGODB_HOST': app.config['MONGODB_TEST_URL'],
-                'DISABLE_SOLR': True,
-                'TESTING': True
+                'DISABLE_SOLR': True
             }
+        test_config['TESTING'] = True
+        test_config['MONGODB_HOST'] = app.config['MONGODB_TEST_URL']
         test_config['DISABLE_MAIL'] = False
         test_config['MAIL_SUPPRESS_SEND'] = True
         test_config['TOKEN_FRESHNESS_VALIDITY'] = 100000
