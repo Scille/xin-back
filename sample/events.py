@@ -2,7 +2,7 @@
 Centralize the events
 """
 
-from core.tools import Tree
+from core.tree import Tree
 from core.auth import current_user
 
 

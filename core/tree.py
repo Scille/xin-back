@@ -5,12 +5,12 @@ class Tree:
 
         >>> t = Tree({
         ...     'node_1': ('leaf_1_1', 'leaf_1_2'),
-        ...     'node_2': ('leaf_2_1', {node_2_2': ('leaf_2_2_1', 'leaf_2_2_2')}),
+        ...     'node_2': ('leaf_2_1', {'node_2_2': ('leaf_2_2_1', 'leaf_2_2_2')}),
         ... })
         ...
         >>> t.node_1.leaf_1_1
         'node_1.leaf_1_1'
-        >>> t.node_1.node_2_2.leaf_2_2_1
+        >>> t.node_2.node_2_2.leaf_2_2_1
         'node_1.node_2_2.leaf_2_2_1'
 
     Each node in the tree is a Tree object, each leaf is build
