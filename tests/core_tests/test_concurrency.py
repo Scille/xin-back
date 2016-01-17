@@ -12,9 +12,6 @@ class ConcurrencyTestApp:
     def __init__(self):
         self.app = CoreApp("TestDecode")
         self.app.bootstrap()
-        self.app.config['SECRET_KEY'] = "test"
-        self.app.config['TOKEN_VALIDITY'] = 10000
-        self.app.config['TOKEN_FRESHNESS_VALIDITY'] = 10000
 
     def get(self):
         return self.app
