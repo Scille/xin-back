@@ -10,7 +10,7 @@ from core.concurrency import ConcurrencyError
 class ConcurrencyTestApp:
 
     def __init__(self):
-        self.app = CoreApp("TestDecode")
+        self.app = CoreApp("Testconcurrency")
         self.app.bootstrap()
 
     def get(self):
