@@ -15,6 +15,7 @@ def _get_current_user():
 
 
 class VersionedDocument(Document):
+
     """
     Mongoengine abstract document handling version, udpated and created fields
     as long as concurrent modifications handling
@@ -53,15 +54,12 @@ class VersionedDocument(Document):
                 kwargs['save_condition']['doc_version'] = self.doc_version
         try:
             return super().save(*args, **kwargs)
-        except mongoengine.errors.OperationError as e:
-            # TODO: fix this when https://github.com/MongoEngine/mongoengine/pull/1070 is upstream
-            if type(e) is mongoengine.errors.OperationError:
-                raise ConcurrencyError()
-            else:
-                raise
+        except mongoengine.errors.SaveConditionError as e:
+            raise ConcurrencyError()
 
 
 class HistorizedDocument(VersionedDocument):
+
     """
     Mongoengine abstract document handling history and race condition
     """
@@ -72,7 +70,12 @@ class HistorizedDocument(VersionedDocument):
         self.history_cls = self._bootstrap_history_cls()
         # Shorthand to get the history of the current document
         self.get_history = lambda *args, **kwargs: \
-            self.history_cls.objects(*args, origin=self, **kwargs)
+            self.history_cls.objects(*args, origin=self, **kwargs).order_by('version')
+
+    @classmethod
+    def get_collection_history(cls):
+        """Return history class for the document's collection"""
+        return cls._bootstrap_history_cls()
 
     @staticmethod
     def _history_post_delete(sender, document):
@@ -104,15 +107,18 @@ class HistorizedDocument(VersionedDocument):
         collection = cls._meta['collection'] + '.history'
         assert collection != '.history', cls
 
-        class HistoryItem(Document):
-            meta = {'collection': collection}
-            origin = mongoengine.ReferenceField(cls, required=True)
-            author = mongoengine.ReferenceField('User') # TODO should be configurable
-            # content = mongoengine.DictField()
-            content = mongoengine.StringField()
-            action = mongoengine.StringField(choices=['CREATE', 'UPDATE', 'DELETE'], required=True)
-            version = mongoengine.IntField(required=True)
-            date = mongoengine.DateTimeField(required=True)
+        # Create history class with a dynamic name
+        HistoryItem = type(cls.__name__ + 'History', (Document, ), {
+            'meta': {'collection': collection},
+            'origin': mongoengine.ReferenceField(cls, required=True),
+            'author': mongoengine.ReferenceField('Utilisateur'),
+            # 'content': mongoengine.DictField(),
+            'content': mongoengine.StringField(),
+            'action': mongoengine.StringField(
+                choices=['CREATE', 'UPDATE', 'DELETE'], required=True),
+            'version': mongoengine.IntField(required=True),
+            'date': mongoengine.DateTimeField(required=True),
+        })
 
         cls._meta['history_cls'] = HistoryItem
         # Register signals to trigger history creation
