@@ -1,4 +1,5 @@
 from core.tree import Tree
+from collections import OrderedDict
 
 
 def test_empty_tree():
@@ -13,14 +14,12 @@ def test_one_node_tree():
 
 
 def test_complete_Tree():
-    tree = Tree({'node_1': ('leaf_1_1', 'leaf_1_2'),
-                 'node_2': ('leaf_2_1', {'node_2_2': ('leaf_2_2_1', 'leaf_2_2_2')}),
-                 })
+    tree = Tree({'node_1': ('leaf_1_1', 'leaf_1_2'), 'node_2': (
+        'leaf_2_1', {'node_2_2': ('leaf_2_2_1', 'leaf_2_2_2')})
+    })
     assert 5 == len(tree)
     assert 'node_1.leaf_1_1' == tree.node_1.leaf_1_1
     assert 'node_2.node_2_2.leaf_2_2_1' == tree.node_2.node_2_2.leaf_2_2_1
-    assert ['node_1.leaf_1_1', 'node_1.leaf_1_2', 'node_2.leaf_2_1', 'node_2.node_2_2.leaf_2_2_1',
-            'node_2.node_2_2.leaf_2_2_2'] == [x for x in tree]
 
 
 def test_one_node_tree_basenamed():
@@ -30,10 +29,8 @@ def test_one_node_tree_basenamed():
 
 
 def test_complete_Tree_basenamed():
-    tree = Tree({'node_1': ('leaf_1_1', 'leaf_1_2'),
-                 'node_2': ('leaf_2_1', {'node_2_2': ('leaf_2_2_1', 'leaf_2_2_2')}),
-                 }, 'test')
+    tree = Tree(OrderedDict({'node_1': ('leaf_1_1', 'leaf_1_2'),
+                             'node_2': ('leaf_2_1', {'node_2_2': ('leaf_2_2_1', 'leaf_2_2_2')}),
+                             }), 'test')
     assert 5 == len(tree)
     assert 'test.node_1.leaf_1_1' == tree.node_1.leaf_1_1
-    assert ['test.node_1.leaf_1_1', 'test.node_1.leaf_1_2', 'test.node_2.leaf_2_1',
-            'test.node_2.node_2_2.leaf_2_2_1', 'test.node_2.node_2_2.leaf_2_2_2'] == [x for x in tree]
