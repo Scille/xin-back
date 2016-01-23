@@ -111,7 +111,7 @@ class HistorizedDocument(VersionedDocument):
         HistoryItem = type(cls.__name__ + 'History', (Document, ), {
             'meta': {'collection': collection},
             'origin': mongoengine.ReferenceField(cls, required=True),
-            'author': mongoengine.ReferenceField('Utilisateur'),
+            'author': mongoengine.ReferenceField('User'),
             # 'content': mongoengine.DictField(),
             'content': mongoengine.StringField(),
             'action': mongoengine.StringField(
