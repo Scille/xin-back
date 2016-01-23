@@ -60,21 +60,21 @@ def test_token_decode_fail_due_to_token_freshness():
 
 
 def test_check_password_strenght():
-    passwordGood = "ahahAhah012&"
-    passwordWithSpecials = "1Aa!@#$%^&*+-/[]{}\\|=/?><,.;:\'"
-    passwordToShort = "Short1"
-    passwordWithoutMajuscule = "nomajuscule12&"
-    passwordWithoutMinuscule = "01234567aa&"
-    passwordWithoutNumber = "NoNumberInPassword&"
-    passwordSpecialNotHandle = "éFrenchNotHandle1"
+    password_good = "ahahAhah012&"
+    password_with_specials = "1Aa!@#$%^&*+-/[]{}\\|=/?><,.;:\'"
+    password_to_short = "Short1"
+    password_without_majuscule = "nomajuscule12&"
+    password_without_minuscule = "01234567aa&"
+    password_without_number = "NoNumberInPassword&"
+    password_special_not_handle = "éFrenchNotHandle1"
 
-    assert True == check_password_strength(passwordGood)
-    assert True == check_password_strength(passwordWithSpecials)
-    assert False == check_password_strength(passwordToShort)
-    assert False == check_password_strength(passwordWithoutMajuscule)
-    assert False == check_password_strength(passwordWithoutMinuscule)
-    assert False == check_password_strength(passwordWithoutNumber)
-    assert False == check_password_strength(passwordSpecialNotHandle)
+    assert True == check_password_strength(password_good)
+    assert True == check_password_strength(password_with_specials)
+    assert False == check_password_strength(password_to_short)
+    assert False == check_password_strength(password_without_majuscule)
+    assert False == check_password_strength(password_without_minuscule)
+    assert False == check_password_strength(password_without_number)
+    assert False == check_password_strength(password_special_not_handle)
 
 
 def test_generate_password():
