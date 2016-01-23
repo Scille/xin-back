@@ -1,7 +1,6 @@
 from sample_tests import common
 import pytest
 from sample_tests.test_auth import user
-from mongoengine.errors import SaveConditionError
 from core.model_util import fields, HistorizedDocument
 from core.concurrency import ConcurrencyError
 
@@ -49,7 +48,7 @@ class TestHistory(common.BaseTest):
         doc_concurrent.field = 'concurrent_version'
         doc_concurrent.save()
         assert doc_concurrent.doc_version == 3
-        with pytest.raises(SaveConditionError):
+        with pytest.raises(ConcurrencyError):
             doc.field = 'invalid_version'
             doc.save()
 
