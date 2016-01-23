@@ -30,7 +30,7 @@ manager.add_command("runserver", Server())
 manager.add_command("shell", BootstrappedShell())
 manager.add_command("solr", solr_manager_factory((model.User, )))
 
-init_patcher(app, app.db.connection.get_default_database())
+init_patcher(app, app.extensions['mongoengine'][app.db]['conn'].get_default_database())
 manager.add_command("datamodel", patcher_manager)
 
 
