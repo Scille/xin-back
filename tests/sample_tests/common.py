@@ -133,25 +133,19 @@ class BaseTest:
     @classmethod
     def _clean_db(cls):
         cls.app.db.connection.drop_database(
-            cls.app.db.connection.get_default_database().name)
+            cls.app.extensions['mongoengine'][cls.app.db]['conn'].get_default_database().name)
 
     @classmethod
     def setup_class(cls):
         """
         Initialize flask app and configure it with a clean test database
         """
-        runsolr = pytest.config.getoption('runsolr')
+
         app = create_app()
         app.testing = True
-        if runsolr:
-            test_config = {
-                'SOLR_URL': app.config['SOLR_TEST_URL'],
-                'DISABLE_SOLR': False,
-            }
-        else:
-            test_config = {
-                'DISABLE_SOLR': True
-            }
+        test_config = {
+            'DISABLE_SOLR': True
+        }
         test_config['TESTING'] = True
         test_config['MONGODB_HOST'] = app.config['MONGODB_TEST_URL']
         test_config['DISABLE_MAIL'] = False
@@ -166,8 +160,6 @@ class BaseTest:
         cls.ctx = app.app_context()
         cls.ctx.push()
         cls.client_app = ClientAppRouteWrapper(app)
-        if runsolr:
-            cls._clean_solr()
         cls._clean_db()
 
     @classmethod
