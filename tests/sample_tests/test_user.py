@@ -1,12 +1,12 @@
 import pytest
 import json
 
-from sample_tests import common
-from sample_tests.test_auth import user
-
 from sample.model.user import User
 from sample.permissions import POLICIES as p
 from sample.tasks.email import mail
+
+from common import BaseTest, pagination_testbed, assert_links
+from sample_tests.test_auth import user
 
 
 @pytest.fixture
@@ -14,7 +14,7 @@ def another_user(request, password='password', email="jane.dane@test.com"):
     return user(request, email=email, password=password)
 
 
-class TestUser(common.BaseTest):
+class TestUser(BaseTest):
 
     def test_links_list(self, user):
         user_req = self.make_auth_request(user, user._raw_password)
@@ -22,12 +22,12 @@ class TestUser(common.BaseTest):
         user.save()
         r = user_req.get('/users')
         assert r.status_code == 200, r
-        common.assert_links(r, ['self', 'root'])
+        assert_links(r, ['self', 'root'])
         user.permissions.append(p.user.create.name)
         user.save()
         r = user_req.get('/users')
         assert r.status_code == 200, r
-        common.assert_links(r, ['self', 'create', 'root'])
+        assert_links(r, ['self', 'create', 'root'])
 
     def test_links_single(self, user, another_user):
         user_req = self.make_auth_request(user, user._raw_password)
@@ -36,23 +36,23 @@ class TestUser(common.BaseTest):
         route = '/users/%s' % another_user.pk
         r = user_req.get(route)
         assert r.status_code == 200, r
-        common.assert_links(r, ['self', 'parent'])
+        assert_links(r, ['self', 'parent'])
         user.permissions.append(p.user.modify.name)
         user.save()
         r = user_req.get(route)
         assert r.status_code == 200, r
-        common.assert_links(r, ['self', 'update', 'parent'])
+        assert_links(r, ['self', 'update', 'parent'])
         user.permissions = [p.user.see.name, p.history.see.name]
         user.save()
         r = user_req.get(route)
         assert r.status_code == 200, r
-        common.assert_links(r, ['self', 'history', 'parent'])
+        assert_links(r, ['self', 'history', 'parent'])
 
     def test_links_self(self, user):
         user_req = self.make_auth_request(user, user._raw_password)
         r = user_req.get('/me')
         assert r.status_code == 200, r
-        common.assert_links(r, ['self', 'update', 'root'])
+        assert_links(r, ['self', 'update', 'root'])
 
     def test_bad_field(self, user):
         user_req = self.make_auth_request(user, user._raw_password)
@@ -191,7 +191,7 @@ class TestUser(common.BaseTest):
         assert r.status_code == 200, r
 
 
-class TestPaginationUser(common.BaseTest):
+class TestPaginationUser(BaseTest):
 
     def test_paginate_users(self, user):
         user_req = self.make_auth_request(user, user._raw_password)
@@ -204,10 +204,10 @@ class TestPaginationUser(common.BaseTest):
                             lastname='Pagination', firstname='Elem')
             new_user.save()
         # Now let's test the pagination !
-        common.pagination_testbed(user_req, '/users')
+        pagination_testbed(user_req, '/users')
 
 
-class TestUserConcurrency(common.BaseTest):
+class TestUserConcurrency(BaseTest):
 
     def test_concurrency(self, user):
         user_req = self.make_auth_request(user, user._raw_password)

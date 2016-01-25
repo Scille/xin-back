@@ -1,11 +1,13 @@
-from sample_tests import common
 import pytest
-from sample_tests.test_auth import user
+
 from core.model_util import fields, HistorizedDocument
 from core.concurrency import ConcurrencyError
 
 from sample.permissions import POLICIES as p
 from sample.model.user import User
+
+from sample_tests.test_auth import user
+from common import BaseTest, pagination_testbed, assert_links
 
 
 DEFAULT_USER_PAYLOAD = {
@@ -20,7 +22,7 @@ class Document(HistorizedDocument):
     field = fields.StringField()
 
 
-class TestHistory(common.BaseTest):
+class TestHistory(BaseTest):
 
     def test_history(self):
         doc = Document(field='first_version')
@@ -53,7 +55,7 @@ class TestHistory(common.BaseTest):
             doc.save()
 
 
-class TestAPIHistory(common.BaseTest):
+class TestAPIHistory(BaseTest):
 
     def test_api(self, user):
         user_req = self.make_auth_request(user, user._raw_password)
@@ -113,7 +115,7 @@ class TestAPIHistory(common.BaseTest):
         r = user_req.get('/users/%s/history' % user.pk)
         assert r.status_code == 200, r
         history_elem_ref = r.data['_items'][0]['_links']['self']
-        common.assert_links(r, ['self', 'origin'])
+        assert_links(r, ['self', 'origin'])
         history_ref = r.data['_links']['self'].split('?')[0]
         origin_ref = r.data['_links']['origin']
         r = user_req.get(r.data['_links']['origin'])
@@ -127,7 +129,7 @@ class TestAPIHistory(common.BaseTest):
         assert r.data['_links']['origin'] == origin_ref
 
 
-class TestPaginationSite(common.BaseTest):
+class TestPaginationSite(BaseTest):
 
     @pytest.mark.xfail
     def test_paginate_users(self, user):
@@ -146,4 +148,4 @@ class TestPaginationSite(common.BaseTest):
             r = user_req.patch(site_route, data={'firstname': 'change-%s' % i})
             assert r.status_code == 200, r
         # Now let's test the pagination !
-        common.pagination_testbed(user_req, '/users/%s/history' % site_id)
+        pagination_testbed(user_req, '/users/%s/history' % site_id)

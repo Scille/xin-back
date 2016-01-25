@@ -5,59 +5,53 @@ from core.model_util import (Document, HistorizedDocument, BaseController,
 from core.concurrency import ConcurrencyError
 from core.core_app import CoreApp
 
-
-class ControllerTestApp:
-
-    def __init__(self):
-        self.app = CoreApp("TestController")
-        self.app.bootstrap()
-
-    def get(self):
-        return self.app
+from common import BaseTest
 
 
-def test_controller():
-    def controller_factory(document):
-        router = {
-            'ready': ReadyController,
-            'fired': FiredController,
-            'reloading': ReloadingController
-        }
-        return router[document.status](document)
+class TestController(BaseTest):
 
-    class ReadyController(BaseController):
+    def test_controller(self):
 
-        def state(self):
-            return "%s is ready to fire" % self.document.name
+        def controller_factory(document):
+            router = {
+                'ready': ReadyController,
+                'fired': FiredController,
+                'reloading': ReloadingController
+            }
+            return router[document.status](document)
 
-        def fire(self):
-            self.document.status = 'fired'
-            self.document.save()
+        class ReadyController(BaseController):
 
-    class FiredController(BaseController):
+            def state(self):
+                return "%s is ready to fire" % self.document.name
 
-        def state(self):
-            return "%s is empty" % self.document.name
+            def fire(self):
+                self.document.status = 'fired'
+                self.document.save()
 
-        def reload(self):
-            self.document.status = 'reloading'
-            self.document.save()
+        class FiredController(BaseController):
 
-    class ReloadingController(BaseController):
+            def state(self):
+                return "%s is empty" % self.document.name
 
-        def state(self):
-            return "%s is reloading..." % self.document.name
+            def reload(self):
+                self.document.status = 'reloading'
+                self.document.save()
 
-        def done(self):
-            self.document.status = 'ready'
-            self.document.save()
+        class ReloadingController(BaseController):
 
-    class Gun(ControlledDocument):
-        meta = {'controller_cls': controller_factory}
-        name = fields.StringField(required=True)
-        status = fields.StringField(choices=['ready', 'fired', 'reloading'], required=True)
-    app = ControllerTestApp().get()
-    with app.app_context():
+            def state(self):
+                return "%s is reloading..." % self.document.name
+
+            def done(self):
+                self.document.status = 'ready'
+                self.document.save()
+
+        class Gun(ControlledDocument):
+            meta = {'controller_cls': controller_factory}
+            name = fields.StringField(required=True)
+            status = fields.StringField(choices=['ready', 'fired', 'reloading'], required=True)
+
         doc = Gun(name='gun-1', status='ready')
         doc.save()
         assert isinstance(doc.controller, ReadyController)
@@ -70,19 +64,18 @@ def test_controller():
         assert isinstance(doc.controller, ReloadingController)
         doc.controller.done()
 
+    def test_dualinheritance(self):
 
-def test_dualinheritance():
-    class DualInheritanceController(BaseController):
+        class DualInheritanceController(BaseController):
 
-        def make_v2(self):
-            self.document.field = 'v2'
-            self.document.save()
+            def make_v2(self):
+                self.document.field = 'v2'
+                self.document.save()
 
-    class DualInheritanceDoc(ControlledDocument, HistorizedDocument):
-        meta = {'controller_cls': DualInheritanceController}
-        field = fields.StringField()
-    app = ControllerTestApp().get()
-    with app.app_context():
+        class DualInheritanceDoc(ControlledDocument, HistorizedDocument):
+            meta = {'controller_cls': DualInheritanceController}
+            field = fields.StringField()
+
         doc = DualInheritanceDoc(field='v1')
         doc.save()
         # Make sure we have both history and controller functionalities

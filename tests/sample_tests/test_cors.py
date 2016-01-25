@@ -1,6 +1,6 @@
 import pytest
 
-from sample_tests import common
+from common import BaseTest
 
 
 CORS_HEADERS = [
@@ -12,7 +12,7 @@ CORS_HEADERS = [
 ]
 
 
-class TestCORS(common.BaseTest):
+class TestCORS(BaseTest):
 
     def test_no_origin(self):
         # No origin, no access

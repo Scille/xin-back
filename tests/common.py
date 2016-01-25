@@ -136,7 +136,7 @@ class BaseTest:
             cls.app.extensions['mongoengine'][cls.app.db]['conn'].get_default_database().name)
 
     @classmethod
-    def setup_class(cls):
+    def setup_class(cls, config=None):
         """
         Initialize flask app and configure it with a clean test database
         """
@@ -153,6 +153,8 @@ class BaseTest:
         test_config['TOKEN_FRESHNESS_VALIDITY'] = 100000
         test_config['TOKEN_VALIDITY'] = 100000
         test_config['SECRET_KEY'] = "testUltraSecretKey"
+
+        test_config.update(config or {})
 
         bootstrap_app(app=app, config=test_config)
 

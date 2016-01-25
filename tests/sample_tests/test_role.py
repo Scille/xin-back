@@ -1,11 +1,12 @@
 import pytest
 
-from sample_tests import common
-from sample_tests.test_auth import user
 from sample.permissions import POLICIES as p
 
+from common import BaseTest
+from sample_tests.test_auth import user
 
-class TestRole(common.BaseTest):
+
+class TestRole(BaseTest):
 
     @classmethod
     def setup_class(cls):

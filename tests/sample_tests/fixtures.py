@@ -5,5 +5,4 @@ for cmd in [
     try:
         exec(cmd)
     except ImportError as e:
-        print('FIXTURE IMPORT ERROR ==> %s' % e)
         continue

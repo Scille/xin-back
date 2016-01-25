@@ -1,27 +1,20 @@
 import pytest
 
-from core.core_app import CoreApp
 from core.model_util import (VersionedDocument, fields)
 from core.concurrency import ConcurrencyError
+
+from common import BaseTest
 
 # This do not test the concurrency handler need to setup a small app
 
 
-class ConcurrencyTestApp:
+class TestConcurrency(BaseTest):
 
-    def __init__(self):
-        self.app = CoreApp("Testconcurrency")
-        self.app.bootstrap()
+    def test_concurrency(app):
 
-    def get(self):
-        return self.app
+        class Doc(VersionedDocument):
+            field = fields.StringField()
 
-
-def test_concurrency():
-    class Doc(VersionedDocument):
-        field = fields.StringField()
-    app = ConcurrencyTestApp().get()
-    with app.app_context():
         doc = Doc(field="v1")
         doc.save()
         assert doc.doc_version == 1

@@ -3,9 +3,10 @@ import json
 from base64 import b64decode, b64encode
 from datetime import datetime
 
-from sample_tests import common
-from sample.model.user import User
 from core.auth import generate_access_token, generate_remember_me_token
+from sample.model.user import User
+
+from common import BaseTest
 
 
 @pytest.fixture
@@ -21,7 +22,7 @@ def user(request, email='john.doe@test.com', password='password', **kwargs):
     return new_user
 
 
-class TestAuth(common.BaseTest):
+class TestAuth(BaseTest):
 
     def test_not_allowed(self):
         assert self.client_app.get('/me').status_code == 401
