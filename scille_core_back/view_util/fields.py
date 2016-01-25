@@ -2,13 +2,14 @@ from marshmallow import ValidationError
 # Republishing the default fields...
 from marshmallow_mongoengine.fields import *  # noqa
 
-from core.view_util.schema import UnknownCheckedSchema
+from scille_core_back.view_util.schema import UnknownCheckedSchema
 
 
 # ...and add custom ones
 
 
 class UTCTZnaiveDateTime(DateTime):
+
     """
     DateTime object in UTC with no tzinfo
     """
@@ -21,6 +22,7 @@ class UTCTZnaiveDateTime(DateTime):
 
 
 class StrictBoolean(Boolean):
+
     """
     Real boolean (i.e. no cast from string) validation
     """
@@ -32,6 +34,7 @@ class StrictBoolean(Boolean):
 
 
 class StrictString(String):
+
     """
     Real string (i.e. no desesperate cast) validation
     """
@@ -43,6 +46,7 @@ class StrictString(String):
 
 
 class StrictList(List):
+
     """
     Real List (i.e. no cast from string) validation
     """
@@ -65,6 +69,7 @@ class StrictList(List):
 
 
 class LinkedReference(Reference):
+
     """
     Marshmallow custom field to map with :class Mongoengine.Reference:
     """
@@ -92,6 +97,7 @@ class LinkedReference(Reference):
 
 
 class LinkedGenericReference(GenericReference):
+
     """
     Marshmallow custom field to map with :class Mongoengine.GenericReference:
     """
@@ -115,7 +121,7 @@ from marshmallow_mongoengine import register_field, register_field_builder
 from marshmallow_mongoengine.conversion.fields import (
     ReferenceBuilder, ListBuilder, EmbeddedDocumentBuilder, GenericReferenceBuilder)
 
-from core.model_util import fields as me_fields
+from scille_core_back.model_util import fields as me_fields
 
 
 class ReferenceBuilder(ReferenceBuilder):

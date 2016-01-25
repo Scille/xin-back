@@ -5,8 +5,8 @@ from flask.ext import cors
 from flask.ext.mongoengine import MongoEngine
 import logging
 
-from core.encoders import dynamic_json_encoder_factory, ObjectIdConverter, JsonRequest
-from core.solr import Solr
+from scille_core_back.encoders import dynamic_json_encoder_factory, ObjectIdConverter, JsonRequest
+from scille_core_back.solr import Solr
 
 
 class CoreApp(Flask):

@@ -1,6 +1,6 @@
 from flask.ext.principal import Permission, ActionNeed
 
-from core.tree import Tree
+from scille_core_back.tree import Tree
 
 
 class Policy:

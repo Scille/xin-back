@@ -2,8 +2,8 @@
 Centralize the events
 """
 
-from core.tree import Tree
-from core.auth import current_user
+from scille_core_back.tree import Tree
+from scille_core_back.auth import current_user
 
 
 class Event:

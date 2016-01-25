@@ -1,8 +1,8 @@
 from flask import url_for
 from collections import namedtuple
 
-from core.tools import get_pagination_urlargs, abort
-from core import CoreResource, view_util
+from scille_core_back.tools import get_pagination_urlargs, abort
+from scille_core_back import CoreResource, view_util
 
 
 HistoryAPI = namedtuple('HistoryAPI', ('item', 'endpoint', 'list',

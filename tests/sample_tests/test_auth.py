@@ -3,7 +3,8 @@ import json
 from base64 import b64decode, b64encode
 from datetime import datetime
 
-from core.auth import generate_access_token, generate_remember_me_token
+
+from scille_core_back.auth import generate_access_token, generate_remember_me_token
 from sample.model.user import User
 
 from sample_tests.common import BaseTest

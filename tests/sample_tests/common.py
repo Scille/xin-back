@@ -2,7 +2,7 @@ import json
 import pytest
 from collections import namedtuple
 from sample.main import bootstrap_app, create_app
-from core.auth import generate_access_token
+from scille_core_back.auth import generate_access_token
 
 
 class NOT_SET:
@@ -140,7 +140,6 @@ class BaseTest:
         """
         Initialize flask app and configure it with a clean test database
         """
-
         app = create_app()
         app.testing = True
         test_config = {

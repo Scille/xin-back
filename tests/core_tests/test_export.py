@@ -1,6 +1,6 @@
-from core.tools import Export, ExportError
-from core.core_app import CoreApp
-from core.model_util import (Document, VersionedDocument, fields)
+from scille_core_back.tools import Export, ExportError
+from scille_core_back.core_app import CoreApp
+from scille_core_back.model_util import (Document, VersionedDocument, fields)
 
 from core_tests.common import BaseTest
 

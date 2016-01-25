@@ -1,8 +1,8 @@
 from flask import request, url_for
 
-from core.tools import abort, get_search_urlargs, check_if_match
-from core.auth import current_user, is_fresh_auth
-from core import CoreResource, view_util
+from scille_core_back.tools import abort, get_search_urlargs, check_if_match
+from scille_core_back.auth import current_user, is_fresh_auth
+from scille_core_back import CoreResource, view_util
 
 from sample.permissions import POLICIES as p
 from sample.model.user import User

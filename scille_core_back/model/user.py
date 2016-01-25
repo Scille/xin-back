@@ -6,7 +6,7 @@ example: {'email': "jhon.doe@nowhere.com", 'password': "encrypted_password"}
 """
 from datetime import datetime
 from mongoengine import ValidationError
-from core.model_util import BaseController, BaseSolrSearcher, BaseDocument, fields
+from scille_core_back.model_util import BaseController, BaseSolrSearcher, BaseDocument, fields
 
 
 class UserDocumentController(BaseController):
@@ -29,7 +29,7 @@ class UserDocumentController(BaseController):
         """
         Store the password encrypted (i.e. hashed&salted)
         """
-        from core.auth import encrypt_password
+        from scille_core_back.auth import encrypt_password
         self.document.password = encrypt_password(password)
 
     def close_user(self, end_validity=None):
