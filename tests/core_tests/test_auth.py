@@ -5,7 +5,7 @@ from core.auth import (encrypt_password, verify_password, generate_access_token,
                        encode_token, decode_token, check_password_strength,
                        generate_password)
 
-from common import BaseTest
+from core_tests.common import BaseTest
 
 
 class TestCoreAuth(BaseTest):

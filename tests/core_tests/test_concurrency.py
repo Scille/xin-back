@@ -3,7 +3,7 @@ import pytest
 from core.model_util import (VersionedDocument, fields)
 from core.concurrency import ConcurrencyError
 
-from common import BaseTest
+from core_tests.common import BaseTest
 
 # This do not test the concurrency handler need to setup a small app
 

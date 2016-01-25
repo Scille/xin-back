@@ -2,7 +2,7 @@ import pytest
 
 from sample.permissions import POLICIES as p
 
-from common import BaseTest
+from sample_tests.common import BaseTest
 from sample_tests.test_auth import user
 
 

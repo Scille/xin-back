@@ -2,7 +2,7 @@ from core.tools import Export, ExportError
 from core.core_app import CoreApp
 from core.model_util import (Document, VersionedDocument, fields)
 
-from common import BaseTest
+from core_tests.common import BaseTest
 
 # idea here create a fake document (should be common) to insert in database, with a certain number of key
 # insert a certain number of this document in db

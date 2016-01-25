@@ -5,7 +5,7 @@ from sample.model.user import User
 from sample.permissions import POLICIES as p
 from sample.tasks.email import mail
 
-from common import BaseTest, pagination_testbed, assert_links
+from sample_tests.common import BaseTest, pagination_testbed, assert_links
 from sample_tests.test_auth import user
 
 

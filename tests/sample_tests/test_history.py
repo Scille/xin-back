@@ -7,7 +7,7 @@ from sample.permissions import POLICIES as p
 from sample.model.user import User
 
 from sample_tests.test_auth import user
-from common import BaseTest, pagination_testbed, assert_links
+from sample_tests.common import BaseTest, pagination_testbed, assert_links
 
 
 DEFAULT_USER_PAYLOAD = {

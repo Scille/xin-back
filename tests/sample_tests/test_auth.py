@@ -6,7 +6,7 @@ from datetime import datetime
 from core.auth import generate_access_token, generate_remember_me_token
 from sample.model.user import User
 
-from common import BaseTest
+from sample_tests.common import BaseTest
 
 
 @pytest.fixture

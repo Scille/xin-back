@@ -5,7 +5,7 @@ from core.model_util import (Document, HistorizedDocument, BaseController,
 from core.concurrency import ConcurrencyError
 from core.core_app import CoreApp
 
-from common import BaseTest
+from core_tests.common import BaseTest
 
 
 class TestController(BaseTest):
