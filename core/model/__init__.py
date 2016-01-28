@@ -1,4 +1,4 @@
-from scille_core_back.model.user import UserDocument, UserDocumentController, UserDocumentSearcher
+from core.model.user import UserDocument, UserDocumentController, UserDocumentSearcher
 
 
 def init_app(app):

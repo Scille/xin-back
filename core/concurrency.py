@@ -2,7 +2,7 @@ from functools import wraps
 from flask import request
 from flask.ext.restful import unpack
 
-from scille_core_back.tools import abort
+from core.tools import abort
 
 
 class ConcurrencyError(Exception):

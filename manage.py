@@ -4,7 +4,7 @@ from flask import current_app
 from flask.ext.script import Manager, Server, Shell
 from mongopatcher.extensions.flask import init_patcher, patcher_manager
 
-from scille_core_back.managers import solr_manager_factory
+from core.managers import solr_manager_factory
 from sample import bootstrap_app, model
 
 

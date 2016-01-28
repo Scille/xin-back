@@ -3,7 +3,7 @@ This module centralize all the action-needs/permissions used for the
 access rights policy
 """
 
-from scille_core_back.policy import PolicyTree
+from core.policy import PolicyTree
 
 
 POLICIES = PolicyTree({

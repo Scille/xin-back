@@ -4,9 +4,3 @@ Backend demo
 ============
 
 Scille Backend backbone demo.
-
-You can install this lib with pip
-	
-	pip install scille_core_back
-
-This code is under licence WTFPL

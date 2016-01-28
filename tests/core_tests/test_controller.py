@@ -1,9 +1,9 @@
 from mongoengine import ValidationError as MongoValidationError
 
-from scille_core_back.model_util import (Document, HistorizedDocument, BaseController,
-                                         ControlledDocument, VersionedDocument, fields)
-from scille_core_back.concurrency import ConcurrencyError
-from scille_core_back.core_app import CoreApp
+from core.model_util import (Document, HistorizedDocument, BaseController,
+                             ControlledDocument, VersionedDocument, fields)
+from core.concurrency import ConcurrencyError
+from core.core_app import CoreApp
 
 from core_tests.common import BaseTest
 

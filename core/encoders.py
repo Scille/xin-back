@@ -8,17 +8,15 @@ from flask_mongoengine.pagination import Pagination
 from mongoengine import Document
 from flask_principal import Permission
 
-from scille_core_back.view_util.fields import LinkedGenericReference
+from core.view_util.fields import LinkedGenericReference
 
 
 class JsonRequest(Request):
-
     """
     Default flask ``request.get_json()`` returns ``None`` if no payload
     has been provided.
     This class fix this behavior by making get_json failed on missing payload
     """
-
     def get_json(self, *args, **kwargs):
         json = super().get_json(*args, **kwargs)
         if json is None:
@@ -72,7 +70,6 @@ def dynamic_json_encoder_factory():
 
 
 class ObjectIdConverter(BaseConverter):
-
     """
         werkzeug converter to use ObjectId in url ::
 
@@ -83,7 +80,6 @@ class ObjectIdConverter(BaseConverter):
             ... def route(object_id): return 'ok'
             ...
     """
-
     def to_python(self, value):
         try:
             return bson.ObjectId(value)

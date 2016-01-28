@@ -3,7 +3,7 @@ import requests
 from os.path import abspath, dirname
 from flask import current_app, make_response
 
-from scille_core_back.core_app import CoreApp
+from core.core_app import CoreApp
 
 
 def create_app(config=None):
@@ -30,7 +30,7 @@ def bootstrap_app(app=None, config=None):
         app.config.update(config)
 
     from sample import model, events, roles
-    from scille_core_back import auth
+    from core import auth
     from sample.view import api
     from sample.tasks.email import mail
 

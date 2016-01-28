@@ -1,13 +1,12 @@
 from flask import url_for
 from flask.ext.mongoengine import Document
 
-from scille_core_back.model_util.version import HistorizedDocument
-from scille_core_back.model_util.searcher import SearchableDocument
-from scille_core_back.model_util.controller import ControlledDocument
+from core.model_util.version import HistorizedDocument
+from core.model_util.searcher import SearchableDocument
+from core.model_util.controller import ControlledDocument
 
 
 class LinkedDocument(Document):
-
     """
     Mongoengine abstract document providing a way to get links metadata
     from a document
@@ -31,7 +30,6 @@ class LinkedDocument(Document):
 
 
 class Marshallable(Document):
-
     """
     Special unmarshal to properly handle properties
     """
@@ -51,7 +49,6 @@ class Marshallable(Document):
 
 class BaseDocument(ControlledDocument, Marshallable, HistorizedDocument,
                    SearchableDocument, LinkedDocument):
-
     """
     Document default class, all actual documents should inherit from this one
     """

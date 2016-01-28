@@ -1,8 +1,7 @@
 import pytest
 
-
-from scille_core_back.model_util import (VersionedDocument, fields)
-from scille_core_back.concurrency import ConcurrencyError
+from core.model_util import (VersionedDocument, fields)
+from core.concurrency import ConcurrencyError
 
 from core_tests.common import BaseTest
 

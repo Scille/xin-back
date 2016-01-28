@@ -26,8 +26,8 @@ from flask.ext.principal import (Identity, ActionNeed, UserNeed,
 from werkzeug.local import LocalProxy
 from string import ascii_uppercase, ascii_lowercase, digits, punctuation
 
-from scille_core_back.tools import abort
-from scille_core_back.api import CoreApi
+from core.tools import abort
+from core.api import CoreApi
 
 
 # A proxy for the current user. If no user is logged in, returns None
