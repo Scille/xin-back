@@ -26,18 +26,19 @@ class UserDocumentController(BaseController):
                                           'This field is mandatory'})
 
     def set_password(self, password):
-        """
-        Store the password encrypted (i.e. hashed&salted)
-        """
-        from core.auth import encrypt_password
-        self.document.password = encrypt_password(password)
+        """Store the password encrypted (i.e. hashed&salted)"""
+        from core.auth import encrypt_password, check_password_strength
+        if check_password_strength(password):
+            self.document.password = encrypt_password(password)
+            return True
+        return False
 
     def close_user(self, end_validity=None):
         """
         Close the user at the end of validity parameter or at datetime.utcnow
         """
-        if not self.document.end_validity:
-            self.document.end_validity = end_validity or datetime.utcnow()
+        if not self.document.fin_validite:
+            self.document.fin_validite = fin_validite or datetime.utcnow()
             return True
         else:
             # user already closed
@@ -63,4 +64,4 @@ class UserDocument(BaseDocument):
     email = fields.EmailField(max_length=255, required=True, unique=True)
     password = fields.StringField(max_length=255)
     # needed for the token validity
-    end_validity = fields.DateTimeField(null=True)
+    fin_validite = fields.DateTimeField(null=True)

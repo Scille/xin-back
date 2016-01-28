@@ -1,4 +1,4 @@
-"""@package docstring
+"""
 Auth module provide two type of authentification
  - basic auth with login/password
  - token based with remember-me handling
@@ -19,12 +19,13 @@ from hashlib import sha256
 from functools import wraps
 from datetime import datetime
 from passlib.apps import custom_app_context as pwd_context
+from passlib.utils import generate_password as gen_pwd
+from string import ascii_uppercase, ascii_lowercase, digits, punctuation
 from flask import g, request, current_app
 from flask.ext.restful import Resource, reqparse
 from flask.ext.principal import (Identity, ActionNeed, UserNeed,
                                  AnonymousIdentity, identity_changed)
 from werkzeug.local import LocalProxy
-from string import ascii_uppercase, ascii_lowercase, digits, punctuation
 
 from core.tools import abort
 from core.api import CoreApi
@@ -34,55 +35,28 @@ from core.api import CoreApi
 current_user = LocalProxy(lambda: g._current_user)
 
 
-def generate_password(length=12):
-    """
-    Generate a password of lenght 12 by default with upper/lower case character digit and punctuation
-    """
-    from passlib.utils import generate_password as gen_pwd
-    choice = ascii_uppercase + ascii_lowercase + digits + punctuation
-    pwd = gen_pwd(length, choice)
-    while not check_password_strength(pwd):
-        pwd = gen_pwd(size=length, charset=choice)
-    return pwd
-
-
 def encrypt_password(password):
-    """
-    Encrypt a password to store it in the database
-    """
     return pwd_context.encrypt(password)
 
 
 def verify_password(password, pwd_hash):
-    """
-    Decrypt the password with the hash associate to it
-    """
     return pwd_context.verify(password, pwd_hash)
 
 
 def encode_token(payload):
-    """
-    Encode an access token. Note that you need to have a 'SECRET_KEY' in your config.
-    It will use the algorithm HS256 to crypt it
-    """
     return jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm='HS256').decode()
 
 
 def decode_token(token):
-    """
-    Decode an access token previously encode with encode_token
-    """
     try:
         return jwt.decode(token, current_app.config['SECRET_KEY'])
-    except jwt.InvalidTokenError as e:
+    except jwt.InvalidTokenError:
         return None
 
 
 def _build_pass_watcher(hashed_password):
-    """
-    Create a value that get revoked whenever the
-    user's password is changed
-    """
+    # Create a value that get revoked whenever the
+    # user's password is changed
     key = current_app.config['SECRET_KEY'] + hashed_password
     return sha256(key.encode()).hexdigest()
 
@@ -132,22 +106,22 @@ def generate_remember_me_token(email, hashed_password, exp=None):
 
 
 def check_password_strength(password):
-    """
-    Check the password strenght of a user it has to match the following criteria
-        - lenght >= 8
-        - contains upper case character
-        - contains lower case character
-        - contains digit
-        - contains some specials character: !@#$%^&*+-/[]{}\\|=/?><,.;:"\'
-    """
     import re
-    specials = '!@#$%^&*+-/[]{}\\|=/?><,.;:"\''
+    specials = '!@#$%^&*+-/_[]{}\\|=/?><,.;:"\''
     if (len(password) < 8
             or not re.search(r'[A-Z]', password)
             or not re.search(r'[a-z]', password)
             or not re.search(r'[0-9]', password)):
         return False
     return next((True for l in password if l in specials), False)
+
+
+def generate_password(length=12):
+    choice = ascii_uppercase + ascii_lowercase + digits + punctuation
+    pwd = gen_pwd(length, choice)
+    while not check_password_strength(pwd):
+        pwd = gen_pwd(size=length, charset=choice)
+    return pwd
 
 
 class Auth:
@@ -174,9 +148,7 @@ class Auth:
 
 
 def login_required(func, must_be_fresh=False):
-    """
-    Authenticate decorator for the routes
-    """
+    """Authenticate decorator for the routes"""
     @wraps(func)
     def wrapper(*args, **kwargs):
         if not getattr(func, 'authenticated', True):
@@ -185,8 +157,8 @@ def login_required(func, must_be_fresh=False):
         user = _basic_authentication()
         if not user:
             user = _token_authentication(must_be_fresh)
-        if not user or (user.end_validity and
-                        user.end_validity < datetime.utcnow()):
+        if not user or (user.fin_validite and
+                        user.fin_validite < datetime.utcnow()):
             if must_be_fresh:
                 abort(401, 'Token frais requis')
             else:
@@ -234,10 +206,9 @@ class ChangePassword(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('new_password', type=str, required=True)
         args = parser.parse_args()
-        if not check_password_strength(args['new_password']):
+        if not current_user.controller.set_password(args['new_password']):
             abort(400, 'Le mot de passe doit faire au moins 8 caractères '
-                       'avec au moins une majuscule, une minuscule et un caracère spécial')
-        current_user.controller.set_password(args['new_password'])
+                       'avec au moins une majuscule, une minuscule, un caractère spécial et un chiffre')
         current_user.save()
         # Reissue a new token
         return {'token': generate_access_token(current_user.email, current_user.password)}
@@ -327,3 +298,54 @@ def _token_authentication(must_be_fresh=False):
         return None
     user._token_fresh = token['fresh']
     return user
+
+
+class PasswordRecoveryAPI(Resource):
+
+    """
+    class used for creating a reset password token for a user.
+
+    """
+
+    def get(self, user_email=None):
+        """
+        Always return 200 for security purpose (No user discovery and bruteforce)
+        """
+        user_cls = current_app.config.get('AUTH_USER_CLS')
+        if not user_email:
+            return {}, 200
+        user = user_cls.objects.get(email=user_email)
+        if not user:
+            return {}, 200
+        user.controller.reset_password()
+        user.controller.save_or_abort()
+        if mail.debug:
+            return {'token': token}
+        else:
+            return {}, 200
+
+    def post(self, user_email=None):
+        from re import match
+        """
+        Always return 200 for security purpose (No user discovery and bruteforce)
+        """
+        from datetime import datetime
+        user_cls = current_app.config.get('AUTH_USER_CLS')
+        payload = request.get_json()
+        if not user_email or not payload.get('token'):
+            return {}, 200
+        token = payload['token']
+        if not match(r'[0-9a-f]{64}', token):
+            abort(401, {'token': 'Token invalide'})
+        user = user_cls.objects(email=user_email,
+                                reset_password_token=token,
+                                reset_password_token_expire__gte=datetime.utcnow()).first()
+        if user:
+            if not user.controller.set_password(payload['password']):
+                abort(409, 'Le mot de passe doit faire au moins 8 caractères '
+                      'avec au moins une majuscule, une minuscule, un caractère spécial et un chiffre')
+            else:
+                user.controller.save_or_abort()
+        else:
+            abort(401, {'password': 'Utilisateur inexistant ou token expire'})
+        return {}, 200

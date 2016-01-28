@@ -1,12 +1,26 @@
 from flask import url_for
 from collections import namedtuple
+from bson import ObjectId
 
 from core.tools import get_pagination_urlargs, abort
 from core import CoreResource, view_util
+from mongoengine.fields import SequenceField, IntField, ObjectIdField
 
 
 HistoryAPI = namedtuple('HistoryAPI', ('item', 'endpoint', 'list',
                                        'endpoint_list', 'schema'))
+
+
+def convert_id(obj_id_cls, obj_id):
+    try:
+        if isinstance(obj_id_cls, (SequenceField, IntField)):
+            return int(obj_id)
+        elif isinstance(obj_id_cls, (ObjectIdField)):
+            return ObjectId(obj_id)
+        else:
+            return obj_id
+    except ValueError:
+        abort(400, origin='Invalid origin value type')
 
 
 def history_api_factory(origin_cls):
@@ -40,8 +54,7 @@ def history_api_factory(origin_cls):
     class HistoryItemAPI(CoreResource):
 
         def get(self, origin_id, item_id):
-            origin = origin_cls()
-            item = origin._meta['history_cls'].objects.get_or_404(id=item_id)
+            item = history_cls.objects.get_or_404(id=item_id)
             if str(item.origin.id) != origin_id:
                 abort(404)
             return HistorySchema().dump(item).data
@@ -50,8 +63,8 @@ def history_api_factory(origin_cls):
 
         def get(self, origin_id):
             page, per_page = get_pagination_urlargs()
-            origin = origin_cls()
-            items = origin._meta['history_cls'].objects(
+            origin_id = convert_id(origin_cls.id, origin_id)
+            items = history_cls.objects(
                 origin=origin_id).paginate(page=page, per_page=per_page)
             links = {'origin': url_for(endpoint_origin, item_id=origin_id)}
             route = url_for(endpoint_list, origin_id=origin_id)

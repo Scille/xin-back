@@ -10,11 +10,11 @@ from sample_tests.common import BaseTest
 
 
 @pytest.fixture
-def user(request, email='john.doe@test.com', password='password', **kwargs):
+def user(request, email='john.doe@test.com', password='Password-1', **kwargs):
     new_user = User(email=email, **kwargs)
     new_user.controller.set_password(password)
     new_user.save()
-    new_user._raw_password = 'password'
+    new_user._raw_password = 'Password-1'
 
     def finalizer():
         new_user.delete()
@@ -33,7 +33,7 @@ class TestAuth(BaseTest):
         user_req = self.make_auth_request(user, user._raw_password)
         r = user_req.post('/login', data={
             'email': user.email,
-            'password': 'password'
+            'password': 'Password-1'
         }, auth=False)
         assert r.status_code == 200, r
         assert 'token' in r.data, r
@@ -54,7 +54,7 @@ class TestAuth(BaseTest):
         user_req = self.make_auth_request(user, user._raw_password)
         r = user_req.post('/login', data={
             'email': user.email,
-            'password': 'password',
+            'password': 'Password-1',
             'remember_me': True
         }, auth=False)
         assert r.status_code == 200, r
@@ -79,7 +79,7 @@ class TestAuth(BaseTest):
         assert r.status_code == 401, r
         # 2nd Bonus test : remember-me token and issued from it tokens are
         # no longer valid once the password has changed
-        user.controller.set_password('new_password')
+        user.controller.set_password('New-password1')
         user.save()
         assert user_req.get('/me').status_code == 401
         assert user_req.post('/login/remember-me', data={
