@@ -42,11 +42,11 @@ class Tree:
                     for key, value in node.items():
                         self._set_leaf(key, self.__class__(value, make(key)))
                 else:
-                    raise ValueError('Bad node type' % node)
+                    raise ValueError('Bad node type')
         elif isinstance(nodes, str):
             self._set_leaf(nodes, self.build_leaf(make(nodes)))
         else:
-            raise ValueError('Bad node type' % nodes)
+            raise ValueError('Bad nodes type')
 
     def build_leaf(self, route):
         return route
