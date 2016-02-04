@@ -1,3 +1,4 @@
+import pytest
 from mongoengine import ValidationError as MongoValidationError
 
 from core.model_util import (Document, HistorizedDocument, BaseController,
@@ -84,3 +85,29 @@ class TestController(BaseTest):
         assert hasattr(doc, 'get_history')
         history = doc.get_history()
         assert history.count() == 2
+
+    def test_not_implemented(self):
+
+        class NotImplementedDoc(ControlledDocument):
+            meta = {'controller_cls': ''}
+            field = fields.StringField()
+
+        doc = NotImplementedDoc(field="test")
+        with pytest.raises(NotImplementedError):
+            doc.controller
+
+    def test_controlled_clean(self):
+
+        class CleanedController(BaseController):
+
+            def clean(self):
+                self.document.field = 'clean'
+
+        class cleanDoc(ControlledDocument):
+            meta = {'controller_cls': CleanedController}
+            field = fields.StringField()
+
+        doc = cleanDoc(field='v1')
+        doc.save()
+        # Make sure we have both history and controller functionalities
+        assert doc.field == 'clean'
