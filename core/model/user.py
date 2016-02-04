@@ -38,7 +38,7 @@ class UserDocumentController(BaseController):
         Close the user at the end of validity parameter or at datetime.utcnow
         """
         if not self.document.fin_validite:
-            self.document.fin_validite = fin_validite or datetime.utcnow()
+            self.document.fin_validite = end_validity or datetime.utcnow()
             return True
         else:
             # user already closed
