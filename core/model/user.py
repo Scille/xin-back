@@ -7,6 +7,7 @@ example: {'email': "jhon.doe@nowhere.com", 'password': "encrypted_password"}
 from datetime import datetime
 from mongoengine import ValidationError
 from core.model_util import BaseController, BaseSolrSearcher, BaseDocument, fields
+from flask.ext.principal import Identity, UserNeed
 
 
 class UserDocumentController(BaseController):
@@ -43,6 +44,11 @@ class UserDocumentController(BaseController):
         else:
             # user already closed
             return False
+
+    def load_in_app(self, app):
+        identity = Identity(str(self.document.id))
+        identity.provides.add(UserNeed(self.document.id))
+        return identity
 
 
 class UserDocumentSearcher(BaseSolrSearcher):

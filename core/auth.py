@@ -23,8 +23,7 @@ from passlib.utils import generate_password as gen_pwd
 from string import ascii_uppercase, ascii_lowercase, digits, punctuation
 from flask import g, request, current_app
 from flask.ext.restful import Resource, reqparse
-from flask.ext.principal import (Identity, ActionNeed, UserNeed,
-                                 AnonymousIdentity, identity_changed)
+from flask.ext.principal import (AnonymousIdentity, identity_changed)
 from werkzeug.local import LocalProxy
 
 from core.tools import abort
@@ -179,18 +178,7 @@ def _load_identity(user=None):
         identity = AnonymousIdentity()
     else:
         # Use str version of objectid to avoid json encoding troubles
-        identity = Identity(str(user.id))
-        identity.provides.add(UserNeed(user.id))
-        if user.role:
-            role_policies = current_app.config['ROLES'].get(user.role)
-            if role_policies is None:  # Can be empty list
-                current_app.logger.warning('user `%s` has unknow role `%s`' %
-                                           (user.id, user.role))
-            else:
-                for policy in role_policies:
-                    identity.provides.add(policy.action_need)
-        for action in user.permissions:
-            identity.provides.add(ActionNeed(action))
+        identity = user.controller.load_in_app(current_app)
     g._current_user = user
     identity_changed.send(current_app._get_current_object(),
                           identity=identity)
