@@ -228,6 +228,7 @@ class Login(Resource):
         if remember_me:
             remember_me_token = generate_remember_me_token(email, user.password)
             result['remember_me_token'] = remember_me_token
+        _load_identity(user)
         return result
 
 
@@ -307,10 +308,7 @@ class PasswordRecoveryAPI(Resource):
             return {}, 200
         user.controller.reset_password()
         user.controller.save_or_abort()
-        if mail.debug:
-            return {'token': token}
-        else:
-            return {}, 200
+        return {}, 200
 
     def post(self, user_email=None):
         from re import match
