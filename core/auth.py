@@ -107,6 +107,8 @@ def generate_remember_me_token(email, hashed_password, exp=None):
 def check_password_strength(password):
     import re
     specials = '!@#$%^&*+-/_[]{}\\|=/?><,.;:"\''
+    if not password or len(password) == 0:
+        return False
     if (len(password) < 8
             or not re.search(r'[A-Z]', password)
             or not re.search(r'[a-z]', password)
