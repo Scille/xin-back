@@ -8,6 +8,7 @@ from datetime import datetime
 from mongoengine import ValidationError
 from core.model_util import BaseController, BaseSolrSearcher, BaseDocument, fields
 from flask.ext.principal import Identity, UserNeed
+from core.tools import abort
 
 
 class UserDocumentController(BaseController):
@@ -32,7 +33,8 @@ class UserDocumentController(BaseController):
         if check_password_strength(password):
             self.document.password = encrypt_password(password)
             return True
-        return False
+        abort(400, 'Le mot de passe doit faire au moins 8 caractères '
+                   'avec au moins une majuscule, une minuscule, un caractère spécial et un chiffre')
 
     def close_user(self, end_validity=None):
         """
