@@ -13,3 +13,4 @@ __all__ = (
     'NoAuthCoreResource',
     'encrypt_password', 'verify_password', 'encode_token', 'decode_token',
     'is_fresh_auth', 'login_required_fresh', 'Auth', 'current_user')
+__version__ = "0.1.0"
