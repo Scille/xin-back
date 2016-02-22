@@ -46,7 +46,7 @@ def find_version(fname):
         raise RuntimeError('Cannot find version information')
     return version
 
-__version__ = find_version('xin/__init__.py')
+__version__ = find_version('xin_back/__init__.py')
 
 
 def read(fname):
@@ -64,7 +64,7 @@ setup(
     author_email='contact@scille.fr',
     url='https://github.com/Scille/xin-back',
     packages=find_packages(exclude=("test*", )),
-    package_dir={'xin': 'xin'},
+    package_dir={'xin_back': 'xin_back'},
     include_package_data=True,
     install_requires=REQUIRES,
     license='MIT',
