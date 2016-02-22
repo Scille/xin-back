@@ -1,7 +1,7 @@
 import pytest
 
-from core.model_util import fields, HistorizedDocument
-from core.concurrency import ConcurrencyError
+from xin_back.model_util import fields, HistorizedDocument
+from xin_back.concurrency import ConcurrencyError
 
 from sample.permissions import POLICIES as p
 from sample.model.user import User

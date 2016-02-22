@@ -1,8 +1,8 @@
 from datetime import datetime
 from flask.ext.mongoengine import mongoengine, Document
 
-from core.concurrency import ConcurrencyError
-from core.auth import current_user
+from xin_back.concurrency import ConcurrencyError
+from xin_back.auth import current_user
 
 
 def _get_current_user():

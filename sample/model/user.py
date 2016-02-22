@@ -1,6 +1,6 @@
-from core.model_util import fields
-from core.auth import generate_password
-from core.model import UserDocument, UserDocumentSearcher, UserDocumentController
+from xin_back.model_util import fields
+from xin_back.auth import generate_password
+from xin_back.model import UserDocument, UserDocumentSearcher, UserDocumentController
 from sample.tasks.email import default_mail, mail, default_subject
 from sample.roles import ROLES
 from flask.ext.principal import (Identity, ActionNeed, UserNeed)
@@ -24,7 +24,7 @@ class UserController(UserDocumentController):
         return identity
 
     def set_password_and_email(self):
-        from core.auth import encrypt_password
+        from xin_back.auth import encrypt_password
         clear_pwd = generate_password()
         self.document.password = encrypt_password(clear_pwd)
         # send email

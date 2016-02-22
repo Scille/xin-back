@@ -1,12 +1,14 @@
 from flask.ext.mongoengine import mongoengine, Document
 
-from core.tools import abort
+from xin_back.tools import abort
 
 
 class BaseController:
+
     """
     Controller base class, providing usefull function for handling document
     """
+
     def __init__(self, document):
         self.document = document
 
@@ -42,6 +44,7 @@ class BaseController:
 
 
 class ControlledDocument(Document):
+
     """
     Mongoengine abstract document providing a controller attribute to
     alter with style the document !

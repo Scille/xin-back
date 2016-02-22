@@ -2,8 +2,8 @@
 Centralize the events
 """
 
-from core.tree import Tree
-from core.auth import current_user
+from xin_back.tree import Tree
+from xin_back.auth import current_user
 
 
 class Event:

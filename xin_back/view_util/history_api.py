@@ -2,8 +2,9 @@ from flask import url_for
 from collections import namedtuple
 from bson import ObjectId
 
-from core.tools import get_pagination_urlargs, abort
-from core import CoreResource, view_util
+from xin_back.tools import get_pagination_urlargs, abort
+from xin_back.core_resource import CoreResource
+from xin_back import view_util
 from mongoengine.fields import SequenceField, IntField, ObjectIdField
 
 

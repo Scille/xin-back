@@ -1,10 +1,10 @@
 import pytest
 from mongoengine import ValidationError as MongoValidationError
 
-from core.model_util import (Document, HistorizedDocument, BaseController,
-                             ControlledDocument, VersionedDocument, fields)
-from core.concurrency import ConcurrencyError
-from core.core_app import CoreApp
+from xin_back.model_util import (Document, HistorizedDocument, BaseController,
+                                 ControlledDocument, VersionedDocument, fields)
+from xin_back.concurrency import ConcurrencyError
+from xin_back.core_app import CoreApp
 
 from core_tests.common import BaseTest
 

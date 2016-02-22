@@ -1,7 +1,7 @@
 import pytest
 
-from core.model_util import (VersionedDocument, fields)
-from core.concurrency import ConcurrencyError
+from xin_back.model_util import (VersionedDocument, fields)
+from xin_back.concurrency import ConcurrencyError
 
 from core_tests.common import BaseTest
 

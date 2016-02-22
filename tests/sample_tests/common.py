@@ -2,7 +2,7 @@ import json
 import pytest
 from collections import namedtuple
 from sample.main import bootstrap_app, create_app
-from core.auth import generate_access_token
+from xin_back.auth import generate_access_token
 
 
 class NOT_SET:

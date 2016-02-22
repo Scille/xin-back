@@ -1,5 +1,5 @@
-from core import CoreResource, CoreApi
-from core.view_util import history_api
+from xin_back import CoreResource, CoreApi
+from xin_back.view_util import history_api
 
 from sample.view import user_api
 from sample.model import user

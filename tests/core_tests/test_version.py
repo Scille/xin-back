@@ -1,6 +1,6 @@
 import pytest
-from core.model_util import fields, HistorizedDocument
-from core.concurrency import ConcurrencyError
+from xin_back.model_util import fields, HistorizedDocument
+from xin_back.concurrency import ConcurrencyError
 from core_tests.common import BaseTest
 
 

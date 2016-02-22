@@ -1,4 +1,4 @@
-from core.core_app import CoreApp
+from xin_back.core_app import CoreApp
 
 
 class BaseTest:

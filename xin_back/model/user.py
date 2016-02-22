@@ -6,7 +6,7 @@ example: {'email': "jhon.doe@nowhere.com", 'password': "encrypted_password"}
 """
 from datetime import datetime
 from mongoengine import ValidationError
-from core.model_util import BaseController, BaseSolrSearcher, BaseDocument, fields
+from xin_back.model_util import BaseController, BaseSolrSearcher, BaseDocument, fields
 from flask.ext.principal import Identity, UserNeed
 
 
@@ -28,7 +28,7 @@ class UserDocumentController(BaseController):
 
     def set_password(self, password):
         """Store the password encrypted (i.e. hashed&salted)"""
-        from core.auth import encrypt_password, check_password_strength
+        from xin_back.auth import encrypt_password, check_password_strength
         if check_password_strength(password):
             self.document.password = encrypt_password(password)
             return True

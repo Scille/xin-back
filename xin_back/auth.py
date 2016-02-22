@@ -26,8 +26,8 @@ from flask.ext.restful import Resource, reqparse
 from flask.ext.principal import (AnonymousIdentity, identity_changed)
 from werkzeug.local import LocalProxy
 
-from core.tools import abort
-from core.api import CoreApi
+from xin_back.tools import abort
+from xin_back.api import CoreApi
 
 
 # A proxy for the current user. If no user is logged in, returns None

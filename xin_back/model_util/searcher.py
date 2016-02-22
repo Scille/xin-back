@@ -3,11 +3,12 @@ import mongoengine
 from pysolr import SolrError
 from flask import current_app
 
-from core.tools import list_to_pagination
-from core.model_util.version import VersionedDocument
+from xin_back.tools import list_to_pagination
+from xin_back.model_util.version import VersionedDocument
 
 
 class AsbFieldSolrConverter:
+
     """
     Abstract class for a converter from mongoengine field to solr
 
@@ -143,6 +144,7 @@ class ReferenceFieldSolrConverter(AsbFieldSolrConverter):
 
 
 class SolrFieldConverterManager:
+
     """
     Store the available converters class and provide a convenient way
     to tests
@@ -196,6 +198,7 @@ solr_build_converter = solr_field_converter_manager.build_converter
 
 
 class Searcher:
+
     """
     Abstract default searcher class
     """
@@ -229,6 +232,7 @@ def get_document_base_type(document):
 
 
 class BaseSolrSearcher(Searcher):
+
     """
     Base searcher class for solr integration
     """
@@ -245,7 +249,7 @@ class BaseSolrSearcher(Searcher):
             StringFieldSolrConverter('_class_name', solr_field_name='doc_type',
                                      replace_aliases=lambda x: x),
             StringFieldSolrConverter('_class_name', solr_field_name='doc_base_type',
-                extractor=get_document_base_type, replace_aliases=lambda x: x),
+                                     extractor=get_document_base_type, replace_aliases=lambda x: x),
             IntFieldSolrConverter('doc_version', aliases=('_version',)),
             DateTimeFieldSolrConverter('doc_updated', aliases=('_updated',)),
             DateTimeFieldSolrConverter('doc_created', aliases=('_created',)),
@@ -377,6 +381,7 @@ class BaseSolrSearcher(Searcher):
 
 
 class SearchableDocument(VersionedDocument):
+
     """
     Mongoengine abstract document providing search functionalities
     """

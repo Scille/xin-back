@@ -1,6 +1,6 @@
-from core.tools import Export, ExportError
-from core.core_app import CoreApp
-from core.model_util import (Document, VersionedDocument, fields)
+from xin_back.tools import Export, ExportError
+from xin_back.core_app import CoreApp
+from xin_back.model_util import (Document, VersionedDocument, fields)
 
 from core_tests.common import BaseTest
 

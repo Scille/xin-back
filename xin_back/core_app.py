@@ -5,11 +5,12 @@ from flask.ext import restful, cors
 from flask.ext.mongoengine import MongoEngine
 import logging
 
-from core.encoders import dynamic_json_encoder_factory, ObjectIdConverter, JsonRequest
-from core.solr import Solr
+from xin_back.encoders import dynamic_json_encoder_factory, ObjectIdConverter, JsonRequest
+from xin_back.solr import Solr
 
 
 class CoreApp(Flask):
+
     """
     CoreApp is a regular :class:`Flask` app with cors, flask-principal,
     "restfulness" flavors

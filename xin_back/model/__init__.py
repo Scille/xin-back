@@ -1,4 +1,4 @@
-from core.model.user import UserDocument, UserDocumentController, UserDocumentSearcher
+from xin_back.model.user import UserDocument, UserDocumentController, UserDocumentSearcher
 
 
 def init_app(app):

@@ -1,4 +1,4 @@
-from core.tree import Tree
+from xin_back.tree import Tree
 from collections import OrderedDict
 import pytest
 

@@ -1,7 +1,7 @@
 from flask.ext.restful import Resource
 
-from core.concurrency import concurrency_handler
-from core.auth import login_required
+from xin_back.concurrency import concurrency_handler
+from xin_back.auth import login_required
 
 
 class CoreResource(Resource):

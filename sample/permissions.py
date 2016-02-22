@@ -3,7 +3,7 @@ This module centralize all the action-needs/permissions used for the
 access rights policy
 """
 
-from core.policy import PolicyTree
+from xin_back.policy import PolicyTree
 
 
 POLICIES = PolicyTree({
