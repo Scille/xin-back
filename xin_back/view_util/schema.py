@@ -25,7 +25,7 @@ def get_pagination_urlargs(default_per_page=20):
 
 class PaginationSerializer:
 
-    def __init__(self, elem_serializer, route):
+    def __init__(self, elem_serializer, route=None):
         """
         :params elem_serializer: serializer to use on each item. If callable
         it is expected to return the actual serializer to use after being
@@ -65,7 +65,7 @@ class PaginationSerializer:
                         args.append('%s=%s' % (field, i))
                 else:
                     args.append('%s=%s' % (field, item))
-        base_route = self.route + '?' + '&'.join(args)
+        base_route = self.route if self.route else '' + '?' + '&'.join(args)
 
         def make_route(current_page):
             return base_route + '&page=%s' % current_page
