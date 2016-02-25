@@ -88,7 +88,7 @@ class LinkedReference(Reference):
         # this document type
         if value is None:
             return missing
-        dump = {'id': getattr(value, 'pk', value.id)}
+        dump = {'id': str(getattr(value, 'pk', value.id))}
         if hasattr(value, 'get_links'):
             links = value.get_links()
             if links:
@@ -107,7 +107,7 @@ class LinkedGenericReference(GenericReference):
         # this document type
         if value is None:
             return missing
-        dump = {'id': getattr(value, 'pk', value.id),
+        dump = {'id': str(getattr(value, 'pk', value.id)),
                 '_cls': value._class_name}
         if hasattr(value, 'get_links'):
             links = value.get_links()
