@@ -4,29 +4,11 @@ from setuptools import setup, find_packages
 
 
 REQUIRES = (
+    "pysolr==3.4.0",
     "pymongo==2.9",
-    "simplejson==3.7.3",
-    "Flask==0.10.1",
-    "Flask-Cache==0.13.1",
-    "Flask-restful==0.3.4",
-    "flask-mongoengine==0.7.4",
     "mongoengine==0.10.1",
-    "Flask-Principal==0.4.0",
-    "Flask-Script==2.0.5",
-    "Flask-Cors==2.0.0",
-    "Flask-Mail==0.9.1",
-    "flask-marshmallow==0.6.0",
     "marshmallow==2.1.1",
     "marshmallow-mongoengine==0.7.0",
-    "PyJWT==1.1.0",
-    "passlib==1.6.2",
-    "Authomatic==0.0.13",
-    "requests==2.9.1",
-    "docopt==0.6.2",
-    "pysolr==3.3.3",
-    "python-dateutil==2.4.2",
-    "python-daemon==2.0.5",
-    "mongopatcher==0.2.5",
 )
 
 
@@ -64,7 +46,7 @@ setup(
     author_email='contact@scille.fr',
     url='https://github.com/Scille/xin-back',
     packages=find_packages(exclude=("test*", )),
-    package_dir={'xin_back': 'xin_back'},
+    package_dir={'xin': 'xin'},
     include_package_data=True,
     install_requires=REQUIRES,
     license='MIT',
@@ -74,11 +56,10 @@ setup(
         'Intended Audience :: Developers',
         # 'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5'
     ],
     test_suite='tests',
 )
