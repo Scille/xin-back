@@ -4,7 +4,7 @@ import mongoengine as me
 from xin.bb.view_util import BaseModelSchema
 from xin.bb.tools import paginate
 
-from xin.components.calendar.model import Calendar
+from ..model import Calendar
 
 
 event_calendar_creation = "calendar.created"

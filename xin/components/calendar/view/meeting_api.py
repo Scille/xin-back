@@ -4,7 +4,7 @@ from datetime import datetime
 from xin.bb.tools import paginate
 from xin.bb.view_util import BaseModelSchema
 
-from xin.components.calendar.model import Meeting, Calendar
+from ..model import Meeting, Calendar
 
 
 event_meeting_creation = "meeting.created"

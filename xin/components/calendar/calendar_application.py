@@ -2,8 +2,8 @@
 
 from autobahn_sync.core import AutobahnSync
 
-from view import (create_calendar, list_calendar, get_calendar, modify_calendar, event_calendar_creation,
-                  create_meeting, list_meetings, get_meeting, modify_meeting, event_meeting_creation, delete_meeting)
+from .view import (create_calendar, list_calendar, get_calendar, modify_calendar, event_calendar_creation,
+                   create_meeting, list_meetings, get_meeting, modify_meeting, event_meeting_creation, delete_meeting)
 
 from mongoengine import connect
 from mongoengine.connection import _get_db
