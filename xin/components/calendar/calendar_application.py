@@ -8,25 +8,20 @@ from .view import (create_calendar, list_calendar, get_calendar, modify_calendar
 from mongoengine import connect
 from mongoengine.connection import _get_db
 
+from ..butler.launcher_butler import AutobahnButler
+
+required_component = {}
+application_name = "calendar"
+version = "0.1"
+
 
 class CalendarApplication():
 
-    def __init__(self, config=None):
-        if config:
-            import json
-            try:
-                json_file = open(config)
-                self.config = json.load(json_file)
-                json_file.close()
-            except IOError as e:
-                e.strerror = 'Unable to load configuration file (%s)' % e.strerror
-                raise
-        else:
-            self.config = {'CROSSBAR': 'ws://127.0.0.1:8080/ws',
-                           'DATABASE':  {'URL': 'mongodb://localhost:27017/calendar', 'NAME': 'calendar'}}
+    def __init__(self, config):
+        self.config = config
 
     def start(self):
-        self.wamp = AutobahnSync()
+        self.wamp = AutobahnButler(application_name, version, required_component)
         wamp = self.wamp
         connect(self.config['DATABASE']['NAME'], host=self.config['DATABASE']['URL'])
         self.db = _get_db()
@@ -79,5 +74,16 @@ if __name__ == '__main__':
     parser.add_argument('--config', action='store_true', dest="config",
                         help='give a config file to the application ie do not use the default one')
     args = parser.parse_args()
-    app = CalendarApplication(args.config)
-    app.start()
+    config = {'CROSSBAR': 'ws://127.0.0.1:8080/ws',
+              'DATABASE':  {'URL': 'mongodb://localhost:27017/calendar', 'NAME': 'calendar'}}
+    if args.config:
+        import json
+        try:
+            json_file = open(config)
+            config = json.load(args.config)
+            json_file.close()
+        except IOError as e:
+            e.strerror = 'Unable to load configuration file (%s)' % e.strerror
+            raise
+    launcher = CalendarApplication(config)
+    launcher.start()
