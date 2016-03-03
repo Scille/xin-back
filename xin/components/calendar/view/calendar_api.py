@@ -1,8 +1,6 @@
-import marshmallow_mongoengine as ma
 import mongoengine as me
 
-from xin.bb.view_util import BaseModelSchema
-from xin.bb.tools import paginate
+from marshmallow_mongoengine import ModelSchema
 
 from ..model import Calendar
 
@@ -10,7 +8,7 @@ from ..model import Calendar
 event_calendar_creation = "calendar.created"
 
 
-class CalendarSchema(BaseModelSchema):
+class CalendarSchema(ModelSchema):
 
     class Meta:
         model = Calendar
@@ -34,6 +32,7 @@ def create_calendar(name, users=None):
 
 def list_calendar(page=1, per_page=20):
      # users__contains=current_user.id
+    from xin.bb.tools import paginate
     return paginate(calendar_schema, Calendar.objects, page, per_page), 200
 
 
