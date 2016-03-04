@@ -10,6 +10,7 @@ REQUIRES = (
     "marshmallow==2.1.1",
     "marshmallow-mongoengine==0.7.0",
     "Flask==0.10.1",
+    "autobahn-sync",
 )
 
 
