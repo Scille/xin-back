@@ -41,19 +41,26 @@ def _try_to_start_app(application_name, version, required_components):
             _add_to_waiting_list(application_name, version, required_components)
 
 
-# application_name : name of your application
-# version : version of your application
-# required_components dictionary of components required for you application and their version required
-#{
-#   "component" : "1.1",
-#   "component2" : "0.1",
-#   ...
-#}
-# the butler will publish an event:
-# butler.yourapplicationname.start
-# when all the different component required has been register
 @app.register()
 def register(application_name, version, required_components=None):
+    """
+    application_name : name of your application
+    version : version of your application
+    required_components dictionary of components required for you application
+    and their version required
+
+        {
+           "component" : "1.1",
+           "component2" : "0.1",
+           ...
+        }
+
+     the butler will publish an event:
+
+         butler.yourapplicationname.start
+
+     when all the different component required has been register
+     """
     global app
     _try_to_start_app(application_name, version, required_components)
     for k in app._start:

@@ -120,11 +120,11 @@ class LinkedGenericReference(GenericReference):
 
 
 # Monkey patch to replace default DocumentReference field by our custom one
-from marshmallow_mongoengine import register_field, register_field_builder
-from marshmallow_mongoengine.conversion.fields import (
+from marshmallow_mongoengine import register_field, register_field_builder  # noqa
+from marshmallow_mongoengine.conversion.fields import (  # noqa
     ReferenceBuilder, ListBuilder, EmbeddedDocumentBuilder, GenericReferenceBuilder)
 
-from xin.bb.model_util import fields as me_fields
+from xin.bb.model_util import fields as me_fields  # noqa
 
 
 class ListBuilder(ListBuilder):

@@ -1,14 +1,14 @@
 #! /usr/bin/env python3
 
-from autobahn_sync.core import AutobahnSync
-
-from .view import (create_calendar, list_calendar, get_calendar, modify_calendar, event_calendar_creation,
-                   create_meeting, list_meetings, get_meeting, modify_meeting, event_meeting_creation, delete_meeting)
+from .view import (
+    create_calendar, list_calendar, get_calendar, modify_calendar,
+    create_meeting, list_meetings, get_meeting, modify_meeting, delete_meeting)
 
 from mongoengine import connect
 from mongoengine.connection import _get_db
 
 from ..butler.launcher_butler import AutobahnButler
+
 
 required_component = {}
 application_name = "calendar"
@@ -44,9 +44,10 @@ class CalendarApplication():
             return modify_calendar(calendar_id, name, users, append)
 
         @wamp.register('meeting.create')
-        def meeting_create(calendar_id, name, users, date_begin, duration=None, place=None, comment=None, tags=None):
-            return create_meeting(calendar_id,
-                                  name, users, date_begin, duration, place, comment, tags)
+        def meeting_create(calendar_id, name, users, date_begin, duration=None,
+                           place=None, comment=None, tags=None):
+            return create_meeting(calendar_id, name, users, date_begin,
+                                  duration, place, comment, tags)
 
         @wamp.register('meeting.list')
         def meeting_list(calendar_id):
@@ -57,8 +58,10 @@ class CalendarApplication():
             return get_meeting(meeting_id)
 
         @wamp.register('meeting.modify')
-        def meeting_modify(meeting_id, name=None, users=None, append=False, date_begin=None, duration=None, place=None, comment=None, tags=None):
-            return modify_meeting(meeting_id, name, users, append, date_begin, duration, place, comment, tags)
+        def meeting_modify(meeting_id, name=None, users=None, append=False, date_begin=None,
+                           duration=None, place=None, comment=None, tags=None):
+            return modify_meeting(meeting_id, name, users, append, date_begin,
+                                  duration, place, comment, tags)
 
         @wamp.register('meeting.delete')
         def meeting_delete(meeting_id):
@@ -75,7 +78,7 @@ if __name__ == '__main__':
                         help='give a config file to the application ie do not use the default one')
     args = parser.parse_args()
     config = {'CROSSBAR': 'ws://127.0.0.1:8080/ws',
-              'DATABASE':  {'URL': 'mongodb://localhost:27017/calendar', 'NAME': 'calendar'}}
+              'DATABASE': {'URL': 'mongodb://localhost:27017/calendar', 'NAME': 'calendar'}}
     if args.config:
         import json
         try:

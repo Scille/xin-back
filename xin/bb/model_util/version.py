@@ -57,7 +57,7 @@ class VersionedDocument(mongoengine.Document):
                 kwargs['save_condition']['doc_version'] = self.doc_version
         try:
             return super().save(*args, **kwargs)
-        except mongoengine.errors.SaveConditionError as e:
+        except mongoengine.errors.SaveConditionError:
             raise ConcurrencyError()
 
 

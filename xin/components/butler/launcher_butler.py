@@ -49,7 +49,8 @@ class AutobahnButler:
             self.application_name, self.version, self.required_components, self.app, self.callback)
         self.app.run_in_twisted(joined, url, realm, blocking, **kwargs)
 
-    def run(self, url=DEFAULT_AUTOBAHN_ROUTER, realm=DEFAULT_AUTOBAHN_REALM, blocking=False, **kwargs):
+    def run(self, url=DEFAULT_AUTOBAHN_ROUTER, realm=DEFAULT_AUTOBAHN_REALM,
+            blocking=False, **kwargs):
         self.app = AutobahnSync(self.application_name)
         app = self.app
 

@@ -31,7 +31,7 @@ def create_calendar(name, users=None):
 
 
 def list_calendar(page=1, per_page=20):
-     # users__contains=current_user.id
+    # users__contains=current_user.id
     from xin.bb.tools import paginate
     return paginate(calendar_schema, Calendar.objects, page, per_page), 200
 

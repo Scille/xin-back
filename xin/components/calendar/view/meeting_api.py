@@ -16,7 +16,8 @@ class MeetingSchema(BaseModelSchema):
         model = Meeting
 
 
-def create_meeting(calendar_id, name, users=None, date_begin=None, duration=60, place="Undefined", comment=None, tags=None):
+def create_meeting(calendar_id, name, users=None, date_begin=None, duration=60,
+                   place="Undefined", comment=None, tags=None):
     try:
         calendar = Calendar.objects.get(id=calendar_id)
     except me.DoesNotExist:
@@ -47,7 +48,8 @@ def get_meeting(meeting_id):
     return MeetingSchema().dump(meeting).data, 200
 
 
-def modify_meeting(meeting_id, name=None, users=None, append=False, date_begin=None, duration=None, place=None, comment=None, tags=None):
+def modify_meeting(meeting_id, name=None, users=None, append=False, date_begin=None,
+                   duration=None, place=None, comment=None, tags=None):
     try:
         meeting = Meeting.objects.get(id=meeting_id)
     except me.DoesNotExist:
