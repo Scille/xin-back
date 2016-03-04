@@ -1,4 +1,5 @@
-[ ![Codeship Status for Scille/xin-back](https://codeship.com/projects/22b47050-4399-0133-a04d-7a5bd4fdedca/status?branch=master)](https://codeship.com/projects/104129)
+.. image:: https://travis-ci.org/Scille/xin-back.svg?branch=master
+    :target: https://travis-ci.org/Scille/xin-back
 
 Backend demo
 ============
