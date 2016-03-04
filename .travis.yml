@@ -9,10 +9,12 @@ install:
 - pip install tox-travis coveralls
 script: tox
 after_success:
-  - coveralls
+- coveralls
 deploy:
   provider: pypi
   user: touilleMan
   on:
     tags: true
     repo: Scille/xin-back
+  password:
+    secure: ewQY8ZmbCpi/rAxbjUxqQum94tReat2iXWeXZf4KggvQQIL3Q27B7fvLSCtN7hTz8OX96XwJD3amWdB7kIJ3Bw+cI8VXGpejKvNrgU0uJHSOctdZy6zLzM5H8L1LgiIRDALnCmj5/vdNG6TJgvR7vuGJDdVGBYsdnzz6j9XEVKE/ehto0kMVlZ3ilpflZ/KOnZmGSv+J9PQw3yf8XhduF/qsF0CcK8GUSZJO+kX+GOPVxloRpeGawE5W/tGM4/SvSbq9OWu9NfYr4Qcdk3CKDoMd1dGckfhy70khCp74WYszCRdQLeQOCbFnIVwqvQdaINUf3EGIz5bKvQJymSDiHE9wwyPAv9Jt5kmnuP4ZZzyHNB89/GOwBzipYR72H5j3LGnwxRfzeB76aJltZdSz1Hhx54/c87zVi0L7INVOxpQwyj0fYXoHf6BptnXFPq8yQKpb9BEGTmW2Ydowq46x0Q9AxPx4lTvbLbSPC8wAev6tExT9IOggUSe9V9+Mj2qnRaLv/0ydqx5P8a4RNIAoVb+hKX3CZXjCXDrAlbFAe7/cRrYGSeZBaVNSYj5bf0SzNMsjniCzvlZXj9mds6ZYy1i0GnB38sG+BemrBBKvqU7eSi4DxnyJqQCp48GVb6gO+sZ+hQgk4c8Bfv/0bDqgtKkYlKGezO0wanbsvdZz6rQ=
