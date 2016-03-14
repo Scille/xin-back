@@ -1,5 +1,4 @@
 from ..model import Calendar
-from ..model import Meeting
 
 event_calendar_creation = "calendar.created"
 

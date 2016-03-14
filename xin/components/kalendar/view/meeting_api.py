@@ -18,7 +18,8 @@ def create_meeting(calendar_id, name, users=None, date_begin=None, duration=60,
         date_begin = datetime.utcnow()
 
     meeting = Meeting(calendar=calendar.pk, name=name, users=users,
-                      tags=tags if tags else [], comment=comment if comment else "", begin=date_begin, duration=duration, place=place)
+                      tags=tags if tags else [], comment=comment if comment else "",
+                      begin=date_begin, duration=duration, place=place)
     meeting.commit()
     return meeting
 
