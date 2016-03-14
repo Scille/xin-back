@@ -1,0 +1,4 @@
+umongo
+autobahn-sync
+mestr==1.0.4
+crossbar

@@ -1,4 +1,0 @@
-marshmallow==2.1.1
-marshmallow-mongoengine==0.7.0
-mongoengine==0.10.1
-autobahn-sync>=0.2.1
