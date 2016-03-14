@@ -12,6 +12,8 @@ REQUIRES = (
     "Flask==0.10.1",
     "autobahn-sync",
     "umongo",
+    "pyJWT",
+    "passlib"
 )
 
 
