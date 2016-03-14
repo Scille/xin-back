@@ -1,8 +1,8 @@
 from datetime import datetime
 
 from ..model.meeting import Meeting
-from ..calendar.view import create_calendar
-from ..calendar.view.meeting_api import (
+from ..view import create_calendar
+from ..view.meeting_api import (
     create_meeting, list_meetings, get_meeting, modify_meeting, event_meeting_creation)
 
 from .common import BaseTest
