@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from xin.components.calendar.model.meeting import Meeting
-from xin.components.calendar.view import create_calendar
-from xin.components.calendar.view.meeting_api import (
+from ..model.meeting import Meeting
+from ..calendar.view import create_calendar
+from ..calendar.view.meeting_api import (
     create_meeting, list_meetings, get_meeting, modify_meeting, event_meeting_creation)
 
 from .common import BaseTest
