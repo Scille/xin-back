@@ -18,6 +18,6 @@ def encode_token(payload):
 
 def decode_token(token):
     try:
-        return jwt.decode(token, current_app.config['SECRET_KEY'])
+        return jwt.decode(token, SECRET_KEY)
     except jwt.InvalidTokenError:
         return None

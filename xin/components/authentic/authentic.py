@@ -1,10 +1,10 @@
-from autobahn.twisted.wamp import ApplicationSession
+from autobahn.twisted.wamp import ApplicationSession, Application
 from twisted.internet import reactor
 from twisted.web.server import Site
 from twisted.internet.defer import inlineCallbacks, returnValue
 from datetime import datetime
 
-from .config import LISTEN_PORT
+from .config import LISTEN_PORT, RETRIEVE_USER_RPC
 from .rest import rest_api_factory
 from .tools import decode_token
 

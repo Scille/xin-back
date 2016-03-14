@@ -3,7 +3,7 @@ from datetime import datetime
 from klein import Klein
 from twisted.internet.defer import inlineCallbacks, returnValue
 
-from .tools import encrypt_password, verify_password, encode_token, decode_token
+from .tools import encrypt_password, verify_password, encode_token
 from .config import RETRIEVE_USER_RPC, REGISTER_USER_RPC, TOKEN_VALIDITY
 
 
@@ -27,13 +27,12 @@ def rest_api_factory(wamp_session):
 
     klein_app = Klein()
 
-
     @klein_app.handle_errors(Response400)
     def response_400(request, failure):
         request.setResponseCode(400)
         return json.dumps({'message': str(failure.value)})
 
-    @klein_app.route('/login', methods = ['POST'])
+    @klein_app.route('/login', methods=['POST'])
     @inlineCallbacks
     def login(request):
         login, password = _retreive_content(request)
@@ -44,7 +43,7 @@ def rest_api_factory(wamp_session):
         token = encode_token({'login': login, 'exp': exp})
         returnValue(json.dumps({'token': token}))
 
-    @klein_app.route('/signin', methods = ['POST'])
+    @klein_app.route('/signin', methods=['POST'])
     @inlineCallbacks
     def signin(request):
         login, password = _retreive_content(request)
