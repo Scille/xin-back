@@ -21,8 +21,10 @@ def calendar_create(name, users):
 
 
 @autobahn_sync.register('calendar.list')
-def calendar_list():
-    return list_calendar()
+def calendar_list(page=1, per_page=20):
+    cursor = list_calendar(page, per_page)
+    calendars = [c.dump() for c in cursor]
+    return 200, calendars
 
 
 @autobahn_sync.register('calendar.get')
