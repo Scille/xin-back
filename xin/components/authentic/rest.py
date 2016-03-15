@@ -51,7 +51,8 @@ def rest_api_factory(wamp_session):
             return
         login, password = _retreive_content(request)
         user = yield wamp_session.call(RETRIEVE_USER_RPC, login)
-        if not user or not verify_password(password, user.get('hashed_password')):
+        if (not user or not user.get('hashed_password') or
+                not verify_password(password, user['hashed_password'])):
             raise Response400('Unknown user or invalid password')
         returnValue(json.dumps({'login': login, 'token': _create_token(login)}))
 
