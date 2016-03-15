@@ -13,7 +13,8 @@ REQUIRES = (
     "autobahn-sync",
     "umongo",
     "pyJWT",
-    "passlib"
+    "passlib",
+    "klein"
 )
 
 
