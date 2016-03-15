@@ -1,3 +1,4 @@
+from autobahn.wamp.exception import ApplicationError
 from autobahn.twisted.wamp import ApplicationSession, Application
 from twisted.internet import reactor
 from twisted.web.server import Site
@@ -19,17 +20,22 @@ class AuthenticSession(ApplicationSession):
         @inlineCallbacks
         def authenticate(realm, login, details):
             token = decode_token(details['ticket'])
-            if not token or login != token['login'] or token['exp'] > datetime.utcnow():
-                raise Exception('Invalid token')
+            if (not token or login != token['login'] or
+                    token['exp'] < datetime.utcnow().timestamp()):
+                raise ApplicationError("xin.authentic.invalid_ticket",
+                    "could not authenticate session - invalid token"
+                    " '{}' for user {}".format(token, login))
+                raise ApplicationError('Invalid token')
             user = yield self.call(RETRIEVE_USER_RPC, login)
             if not user:
-                raise Exception('Unknown user')
+                raise ApplicationError("xin.authentic.no_such_user",
+                    "could not authenticate session - no such user {}".format(login))
+                raise ApplicationError('Unknown user')
             print("[AUTHENTIC] WAMP-Ticket dynamic authenticator invoked: realm='{}', "
                   "authid='{}', ticket='{}'".format(realm, login, details))
             returnValue(user.get('role'))
 
         return self.register(authenticate, 'xin.authentic.authenticate')
-        print("WAMP-Ticket dynamic authenticator registered!")
 
 
 if __name__ == "__main__":
