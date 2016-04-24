@@ -20,7 +20,7 @@ def _retreive_content(request):
     password = body.get('password')
     if type(login) is not str or type(password) is not str:
         raise Response400('Missing or invalid login and/or password.')
-    return login, password
+    return login, password, body
 
 
 def _set_cors_headers(request):
@@ -49,7 +49,7 @@ def rest_api_factory(wamp_session):
         _set_cors_headers(request)
         if request.method == b'OPTIONS':
             return
-        login, password = _retreive_content(request)
+        login, password, body = _retreive_content(request)
         user = yield wamp_session.call(RETRIEVE_USER_RPC, login)
         if (not user or not user.get('hashed_password') or
                 not verify_password(password, user['hashed_password'])):
@@ -62,9 +62,9 @@ def rest_api_factory(wamp_session):
         _set_cors_headers(request)
         if request.method == b'OPTIONS':
             return
-        login, password = _retreive_content(request)
+        login, password, body = _retreive_content(request)
         hashed_password = encrypt_password(password)
-        user = yield wamp_session.call(REGISTER_USER_RPC, login, hashed_password)
+        user = yield wamp_session.call(REGISTER_USER_RPC, login, hashed_password, body)
         if not user:
             raise Response400("Couldn't create user")
         returnValue(json.dumps({'login': login, 'token': _create_token(login)}))
