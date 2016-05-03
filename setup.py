@@ -25,7 +25,7 @@ def read(fname):
 
 setup(
     name='xin-back',
-    version='0.4.0',
+    version='0.4.1',
     # description='',
     long_description=read('README.rst'),
     author='Scille',
